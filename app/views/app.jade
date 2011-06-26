@@ -1,0 +1,101 @@
+!!! 5
+html(lang="en")
+  head
+    != SocketStream
+    title Showjo.tv
+    link(href='http://fonts.googleapis.com/css?family=Josefin+Slab:100,100italic,light,lightitalic,regular,regularitalic,600,600italic,bold,bolditalic&v1', rel='stylesheet', type='text/css')
+    link(href='http://fonts.googleapis.com/css?family=Swanky+and+Moo+Moo&v1', rel='stylesheet', type='text/css')
+    link(rel='stylesheet', href='/assets/reveal.css')
+    script(type='text/javascript', src='/assets/jquery.reveal.js')
+  body
+    #header-wrapper
+      #header
+        h1 Showjo
+          span .tv
+        h4 The online open mic.
+    #page-wrapper
+      #page
+        #left-col-wrapper.column-wrapper
+          #left-col.column
+            #performer-wrapper
+              #performer
+                h4 Up 
+                  span now
+                p#nobody-on-stage.empty Nobody on stage
+                   span#but-you (but 
+                     span#could-be you could be
+                     | !)
+            #performance-rating-wrapper
+              #performance-rating
+                h4 
+                  span Performance Rating
+                #performance-plot-wrapper
+                  #performance-plot
+        #main-wrapper
+          #main      
+            #stage-wrapper
+              #stage
+                h4 The 
+                  strong Stage
+            #voter-wrapper
+              #voter
+                #lame-button-wrapper.button-wrapper
+                  .vote-button 
+                    span Lame
+                    .thumb
+                #awesome-button-wrapper.button-wrapper
+                  .vote-button 
+                    span Awesome
+                    .thumb
+        #right-col-wrapper.column-wrapper
+          #right-col.column
+            #queue-wrapper
+              #queue
+                h4 Up 
+                  span next
+                ol#queue-list
+                  li.empty Empty
+                #rock-mic-button-wrapper.button-wrapper.orange-button
+                  #rock-mic-button(data-reveal-id='join-queue-modal')
+                    span Rock the 
+                      strong mic
+      #empty-overlay.empty
+        #arrow-img
+        #be-the-star
+        #perform-live Perform 
+          strong live 
+          | from 
+          span your webcam.
+        #no-registration (No 
+          strong registration 
+          | required)
+        #silhouette-wrapper
+          #silhouette
+            #silhouette-img
+    #join-queue-modal.reveal-modal
+      .modal-wrapper
+        h2 Start 
+          strong rockin' 
+          | the mic!
+        h4 Join the queue to grab 3 minutes on stage.
+        form
+          .form-item.text
+            label(for='user_stage_name') Your stage name:
+              span.required *
+            input(type='text', name='user_stage_name', id='user_stage_name')  
+          .form-item.textarea
+            label(for='performance_desc') You performance description:
+            textarea(name='performance_desc', id='performance_desc', rows='3')
+        .form-button-wrapper 
+          #join-queue-button-wrapper.button-wrapper.orange-button
+            #join-queue-button
+              span Join the 
+                strong queue
+          #cancel-queue-button-wrapper.button-wrapper.gray-button
+            #cancel-queue-button
+              span Cancel
+    #performer-view-modal.reveal-modal.xlarge
+      .modal-wrapper
+        h2 You're up next!
+        #publisher-wrapper
+          #publisher    

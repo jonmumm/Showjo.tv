@@ -1,0 +1,320 @@
+// Example Stylus file
+// All changes are detected and automatically compiled into CSS
+
+@import 'helpers'
+
+// Variables
+spacing = 12px
+
+josefin = 'Josefin Slab', arial, serif
+swanky = 'Swanky and Moo Moo', arial, serif
+
+dropshadow = 0px 1px 2px #aaa
+dropshadow-light = 0px 1px 2px #ddd
+dropshadow-dark = 0px 1px 2px #777
+
+// Main
+
+body, html
+	height 100%
+
+body
+	background #dbfbfe
+	font-family josefin
+	
+strong
+	font-weight 600
+	
+h1
+	font-size 4.6em
+	font-weight 700
+
+h1 span
+	font-weight 300
+
+h2
+	font-size 3.2em
+	font-weight 300
+
+h3
+	font-size 1.8em
+
+h4
+	font-size 1.3em
+	font-weight 300
+	
+input, textarea
+	font-family josefin
+	font-size 1em
+	border 1px solid #eee
+	color #666
+	padding 8px
+	padding-bottom 4px
+
+textarea
+	resize: none
+	
+input:focus, textarea:focus
+	outline none
+	border 1px dotted #06e0f4
+
+#header-wrapper
+	background white
+	
+#header
+	height 94px
+	width 975px
+	margin 0 auto
+	position relative
+
+#header h1
+	position absolute
+	top 10px
+
+#header h4
+	color #6c6969
+	position absolute
+	top 54px
+	left 314px
+	
+#page-wrapper
+	width 974px
+	margin 0 auto
+	
+#page > div
+	float left
+
+#main-wrapper
+	width 510px
+	padding 0 spacing
+	margin-top spacing
+	
+.column-wrapper
+	width 220px
+	margin-top spacing
+
+.button-wrapper
+	box-shadow dropshadow
+	padding 12px
+	round 6px
+	text-align center
+	font-size 1.6em
+
+.button-wrapper > div
+	height 28px
+	
+.button-wrapper:hover
+	cursor pointer
+	box-shadow dropshadow-dark
+	
+.orange-button
+	background #ffc924
+	
+.orange-button:hover
+	background #ffd659
+	
+.gray-button
+	background #f9f9f9
+
+.gray-button:hover
+	background #eee
+	
+#stage-wrapper
+	round 8px
+	padding 10px
+	height 405px
+	background white
+	margin-bottom spacing
+
+#voter-wrapper
+	round 8px
+	height 128px
+	background white
+
+#voter
+	position relative
+
+#lame-button-wrapper, #awesome-button-wrapper
+	width 236px
+	height 106px
+	position absolute
+	padding 0px
+	round 10px
+	top 12px
+	font-size 1.9em
+	font-weight 600
+
+#lame-button-wrapper
+	background #fbcdd0
+	left 12px
+	
+#lame-button-wrapper:hover
+	background #fde7f0
+	
+#awesome-button-wrapper
+	background #c7fcb5
+	right 12px
+	
+#awesome-button-wrapper:hover
+	background #edfde7
+	
+.vote-button
+	position relative
+	
+.vote-button > span
+	position absolute
+	top 40px
+	left 96px
+	
+.vote-button .thumb
+	position absolute
+	width 66px
+	height 81px
+	top 12px
+	left 16px
+	
+#awesome-button-wrapper .thumb
+	background url('/images/thumbs-up.png') no-repeat
+
+#lame-button-wrapper .thumb
+	background url('/images/thumbs-down.png') no-repeat
+
+.column > div
+	background white
+	padding 10px
+	margin-bottom spacing
+	round 10px
+
+.column h4, #main-wrapper h4
+	font-style italic
+	round 6px
+	padding 12px
+	background #fdfdfd
+	box-shadow dropshadow-light
+	color #333
+	
+#queue-list
+	margin 12px 10px
+	font-size 1.2em
+	color #ccc
+	
+#performer #nobody-on-stage
+	margin 12px 10px
+	font-size 1.5em
+	color #ccc
+
+#performer #but-you
+	color #e6e6e6
+	margin-top 5px
+	display block
+	font-size .88em
+
+#performer #could-be
+	cursor pointer
+	color #ffd659
+
+#performer #could-be:hover
+	color #ffc924
+	border-bottom 1px dotted #ffc924
+	
+.modal-wrapper h4
+	color #bbb
+
+.modal-wrapper form
+	margin 20px 0
+	font-size 1.4em
+	color #ccc
+
+.form-button-wrapper
+	clear both
+	position relative
+	height 52px
+
+.form-item
+	margin 16px 8px
+	
+.form-item label
+	display block
+	margin-bottom 4px
+
+.form-item input
+	width 300px
+
+.form-item textarea
+	width 472px
+	
+.form-item span.required
+	color #ff6969
+	margin-left 4px
+	
+#join-queue-button-wrapper
+	position absolute
+	bottom 0px
+	right 134px
+	width 190px
+
+#cancel-queue-button-wrapper
+	position absolute
+	bottom 0px
+	right 0px
+	width 100px
+	
+#performer-view-modal #publisher-wrapper
+	margin 0 auto
+	width 480px
+	height 360px
+	round 10px
+	background #f9f9f9
+
+#empty-overlay
+	position relative
+
+#empty-overlay > *
+	position absolute
+	font-family swanky
+	z-index 10
+
+#empty-overlay #silhouette-wrapper
+	z-index 5
+	round 10px
+	border 1px dashed #eee
+	width 490px
+	height 350px
+	left 242px
+	top 76px
+
+#empty-overlay #silhouette
+	position relative
+	
+#empty-overlay #silhouette-img
+	position absolute
+	background url('/images/silhouette.png') no-repeat
+	width 266px
+	height 319px
+	left 16px
+	top 31px
+
+#empty-overlay #perform-live
+	text-align center
+	font-size 2.6em
+	color #444
+	top 128px
+	left 404px
+	line-height .8em
+	
+#empty-overlay #perform-live span
+	display block
+
+#empty-overlay #no-registration
+	letter-spacing 0.1em
+	color #ccc
+	font-size 1.2em
+	top 210px
+	left 464px
+	
+#empty-overlay #arrow-img
+	width 197px
+	height 86px
+	left 596px
+	top 176px
+	background url('/images/arrow.png') no-repeat
