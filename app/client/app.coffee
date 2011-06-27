@@ -9,5 +9,4 @@ exports.init = ->
 
   # Make a call to the server to retrieve a message
   SS.server.app.init (response) ->
-    console.log (response)
-
+    # Get the application state
