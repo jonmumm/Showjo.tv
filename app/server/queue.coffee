@@ -2,13 +2,18 @@ exports.actions =
 
   join: (params, cb) -> 
     # Get the next performance ID
-    R.incr 'next:performance.id', (err, performanceId) =>     
+    R.incr 'next:performance.id', (err, performanceId) =>
       params.id = performanceId  
-      params.user_id = @session.user_id
+      params.user_id = parseInt(@session.user_id)
       
       # Store the performance
       R.set "performance:#{performanceId}", JSON.stringify(params), (err, data) ->     
         SS.publish.broadcast 'queueAdd', params 
+        
+        alert = 
+          speaker: params.name
+          text: "has joined the queue."
+        SS.publish.broadcast 'chatAlert', alert
       
       # Put the performance on the queue       
       R.rpush "queue", performanceId, (err, queueLength) ->
@@ -17,7 +22,11 @@ exports.actions =
           SS.server.performance.tryNext()
       
       # Put the performance in the users list of performance    
-      R.rpush "user:#{@session.user_id}:performances", performanceId   
+      R.rpush "user:#{@session.user_id}:performances", performanceId  
+      
+    # Update the users name
+    SS.server.user.setName.call @, params.name, ->
+       
     cb true
   
   leave: (cb) ->

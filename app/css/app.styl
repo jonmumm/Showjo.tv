@@ -37,7 +37,7 @@ h2
 	font-weight 300
 
 h3
-	font-size 1.8em
+	font-size 2.4em
 
 h4
 	font-size 1.3em
@@ -141,6 +141,44 @@ input:focus, textarea:focus
 
 #voter
 	position relative
+	
+#timer-wrapper
+	height 28px
+	round 8px
+	background white
+	margin-bottom spacing
+	display none
+	
+#timer
+	position relative
+
+.time
+	position absolute
+	color #aaa
+	font-size .8em
+	top 8px
+	
+#time-passed
+	text-align left
+	left 10px
+	
+#time-total
+	text-align right
+	right 10px
+	
+#time-bar-wrapper
+	padding 8px 40px
+
+#time-bar
+	height 12px
+	round 6px
+	width 20%
+
+#time-bar.perform
+	background #049bb4
+
+#time-bar.stage
+	background #ff5432
 
 #lame-button-wrapper, #awesome-button-wrapper
 	width 236px
@@ -209,6 +247,51 @@ input:focus, textarea:focus
 	margin 12px 10px
 	font-size 1.2em
 	color #ccc
+	height 92px
+
+#queue-list.empty
+	height 16px
+
+#messages
+	margin-top 6px
+	overflow auto
+	overflow-y auto
+	overflow-x hidden
+	height 210px
+
+#messages.empty
+	height 284px
+
+#messages.performing
+	height 354px
+	
+#enter_chat_text
+	margin-left 4px
+	margin-top 8px
+	round 6px
+
+#messages .message
+	font-size .8em
+	padding 4px
+	round 4px
+	margin 2px 0
+	
+.message .speaker
+	font-weight bold
+
+.alert
+	font-size .8em
+	font-weight bold
+	padding 4px
+	round 4px
+	margin 2px 0
+	background #ffd659
+
+.message .text
+	color #777
+	
+#messages .message:nth-child(odd)
+	background #f7f7f7
 	
 #performer #nobody-on-stage
 	margin 12px 10px
@@ -228,6 +311,22 @@ input:focus, textarea:focus
 #performer #could-be:hover
 	color #ffc924
 	border-bottom 1px dotted #ffc924
+
+#performer #performer-info
+	display none
+	font-family swanky
+	margin-top 12px
+	round 8px
+	padding 8px
+	border 1px dashed #eee
+
+#performer #performer-name
+	font-size 2.2em
+
+#performer #performer-description
+	margin-top 8px
+	font-size 1.4em
+	color #049bb4
 	
 .modal-wrapper h4
 	color #bbb
@@ -258,6 +357,12 @@ input:focus, textarea:focus
 .form-item span.required
 	color #ff6969
 	margin-left 4px
+
+#enter-name-button-wrapper
+	position absolute
+	bottom 0px
+	left 0px
+	width 140px
 	
 #join-queue-button-wrapper
 	position absolute
@@ -270,18 +375,14 @@ input:focus, textarea:focus
 	bottom 0px
 	right 0px
 	width 100px
-	
-#performer-view-modal #publisher-wrapper
-	margin 0 auto
-	width 480px
-	height 360px
-	round 10px
-	background #f9f9f9
 
-#empty-overlay
+#performance-rating-wrapper
+	display none
+
+.overlay
 	position relative
 
-#empty-overlay > *
+.overlay > *
 	position absolute
 	font-family swanky
 	z-index 10
@@ -310,7 +411,7 @@ input:focus, textarea:focus
 	text-align center
 	font-size 2.6em
 	color #444
-	top 128px
+	top 116px
 	left 404px
 	line-height .8em
 	
@@ -321,12 +422,37 @@ input:focus, textarea:focus
 	letter-spacing 0.1em
 	color #ccc
 	font-size 1.2em
-	top 210px
+	top 188px
 	left 464px
 
 #empty-overlay #arrow-img
 	width 197px
 	height 86px
-	left 596px
-	top 176px
+	left 580px
+	top 162px
 	background url('/images/arrow.png') no-repeat
+
+#access-overlay
+	display none
+
+#access-overlay #arrow-up-img
+	width 70px
+	height 129px
+	left 434px
+	top 320px
+	background url('/images/arrow-up.png') no-repeat
+	
+#access-overlay #press-allow
+	text-align center
+	font-size 2.6em
+	color #fff
+	top 100px
+	left 270px
+	line-height .8em
+
+#access-overlay #asking-access
+	letter-spacing 0.1em
+	color #ccc
+	font-size 1.2em
+	top 144px
+	left 290px

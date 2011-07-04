@@ -15,8 +15,8 @@ exports.actions =
     R.get "performance:current", (err, cur_perf_id) =>
       if cur_perf_id?
         R.get "performance:#{cur_perf_id}", (err, performance) =>
-           performance = JSON.parse(performance)
-           if performance.user_id is @session.user_id          
+          performance = JSON.parse(performance)
+          if performance.user_id is @session.user_id          
             # Add the stream info to the performance
             performance.stream = stream
             R.set "performance:#{cur_perf_id}", JSON.stringify(performance)
@@ -37,6 +37,10 @@ exports.actions =
           if performance.user_id is @session.user_id
             R.del "performance:current"
             SS.publish.broadcast 'performanceCancel', performance
+            alert = 
+              speaker: performance.name
+              text: "has cancelled the performance."
+            SS.publish.broadcast 'chatAlert', alert
 
   # Sends performance state to connecting client
   init: (user_id) ->
@@ -48,56 +52,78 @@ exports.actions =
 # Prepares the performer on stage
 stage = (performance) ->    
   # Mark the time that the performer has come on stage
-  performance.stage_time = new Date()
+
+  performance.stage_time = new Date().toString()
   R.set "performance:#{performance.id}", JSON.stringify(performance)
 
   # Tell everybody someone is on stage
   SS.publish.broadcast 'performanceStage', performance
+  
+  alert = 
+    speaker: performance.name
+    text: "is coming on stage."
+  SS.publish.broadcast 'chatAlert', alert
 
   # Start a timer for when the staging period ends
-  timers.stageEnd performance.stage_time, 10
+  timers.stageEnd performance
 
-# End of staging period, signal start of performance
+# End of staging period, try to start performance
 stageEnd = () ->
   R.get "performance:current", (err, cur_perf_id) ->
     if cur_perf_id?
       R.get "performance:#{cur_perf_id}", (err, performance) ->
         perform JSON.parse(performance)
 
-# Start the performance
+# Start the performance if stream exists
 perform = (performance) ->
-  # Mark the performance start time
-  performance.start_time = new Date()
-  R.set "performance:#{performance.id}", JSON.stringify(performance)
+  if performance.stream?  
+    # Mark the performance start time
+    performance.start_time = new Date().toString()
+    performance.length_sec = SS.shared.constants.PERFORM_LENGTH
+    R.set "performance:#{performance.id}", JSON.stringify(performance)
 
-  # Tell everyone someones performance is starting
-  SS.publish.broadcast 'performanceStart', performance
+    # Tell everyone someones performance is starting
+    SS.publish.broadcast 'performanceStart', performance
+    
+    alert = 
+      speaker: performance.name
+      text: "is performing now!"
+    SS.publish.broadcast 'chatAlert', alert
   
-  # Start a timer for when the performance ends
-  timers.performEnd performance.start_time, 20
+    # Start a timer for when the performance ends
+    timers.performEnd performance
+  else
+    R.del "performance:current"
+    SS.publish.broadcast 'performanceCancel', performance
+    alert = 
+      speaker: performance.name
+      text: "has cancelled the performance."
+    SS.publish.broadcast 'chatAlert', alert
 
 # End of performance, ask for next one
 performEnd = () ->
-  # Get the current performance
-  R.get "performance:current", (err, cur_perf_id) =>
-
+  R.get "performance:current", (err, cur_perf_id) ->
     if cur_perf_id?
-      R.get "performance:#{cur_perf_id}", (err, performance) =>
+      R.get "performance:#{cur_perf_id}", (err, performance) ->
         performance = JSON.parse(performance)
         SS.publish.broadcast 'performanceEnd', performance
+        alert = 
+          speaker: performance.name
+          text: "has finished performing."
+        SS.publish.broadcast 'chatAlert', alert
         R.del "performance:current", (err, response) =>
           exports.actions.tryNext()
 
 timers = 
   # Starts a timer to start the performance when staging time is over
-  stageEnd: (stage_time, delay) ->
-    interval = SS.shared.timers.findInterval(stage_time, delay)
+  stageEnd: (performance) ->
+    interval = SS.shared.time.findInterval(performance.stage_time, SS.shared.constants.STAGE_LENGTH)
     id = setTimeout stageEnd, interval
     @ids.push id
 
   # Starts a timer to end the performance  
-  performEnd: (start_time, delay) ->
-    interval = SS.shared.timers.findInterval(start_time, delay)
+  performEnd: (performance) ->
+    interval = SS.shared.time.findInterval(performance.start_time, SS.shared.constants.PERFORM_LENGTH)
     id = setTimeout performEnd, interval
     @ids.push id
 

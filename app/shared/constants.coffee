@@ -1,0 +1,3 @@
+exports.STAGE_LENGTH = 30
+
+exports.PERFORM_LENGTH = 180

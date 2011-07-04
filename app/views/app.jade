@@ -6,6 +6,8 @@ html(lang="en")
     link(href='http://fonts.googleapis.com/css?family=Josefin+Slab:100,100italic,light,lightitalic,regular,regularitalic,600,600italic,bold,bolditalic&v1', rel='stylesheet', type='text/css')
     link(href='http://fonts.googleapis.com/css?family=Swanky+and+Moo+Moo&v1', rel='stylesheet', type='text/css')
     link(rel='stylesheet', href='/assets/reveal.css')
+    script(type='text/javascript', src='/assets/jquery-ui-1.8.14.custom.min.js')
+    script(type='text/javascript', src='/assets/jquery.effects.core.js')
     script(type='text/javascript', src='http://staging.tokbox.com/v0.91/js/TB.min.js')
     script(type='text/javascript', src='/assets/jquery.reveal.js')
   body
@@ -22,10 +24,13 @@ html(lang="en")
               #performer
                 h4 Up 
                   span now
-                p#nobody-on-stage.empty Nobody on stage
+                p#nobody-on-stage.empty-show Nobody on stage
                    span#but-you (but 
                      span#could-be you could be
                      | !)
+                #performer-info
+                  #performer-name
+                  #performer-description
             #performance-rating-wrapper
               #performance-rating
                 h4 
@@ -38,6 +43,19 @@ html(lang="en")
               #stage
                 h4 The 
                   strong Stage
+                #publisher-wrapper
+            #timer-wrapper
+              #timer
+                #time-passed.time
+                  span.minutes 0
+                  span :
+                  span.seconds 00
+                #time-total.time 
+                  span.minutes 0
+                  span :
+                  span.seconds 00
+                #time-bar-wrapper
+                  #time-bar
             #voter-wrapper
               #voter
                 #lame-button-wrapper.button-wrapper
@@ -54,8 +72,8 @@ html(lang="en")
               #queue
                 h4 Up 
                   span next
-                ol#queue-list
-                  li.empty Empty
+                ol#queue-list.empty-depend.empty
+                  li#queue-empty.empty-show Empty
                 #rock-mic-button-wrapper.button-wrapper.orange-button
                   #rock-mic-button
                     span Rock the 
@@ -64,7 +82,14 @@ html(lang="en")
                   #leave-queue-button
                     span Leave the 
                       strong queue
-      #empty-overlay.empty
+            #live-chat-wrapper
+              #live-chat
+                h4 Live 
+                  span chat
+                #enter-message
+                  input(type='text', name='enter_chat_text', id='enter_chat_text', placeholder='enter a message')
+                #messages.empty-depend.empty
+      #empty-overlay.overlay.empty-show
         #arrow-img
         #be-the-star
         #perform-live Perform 
@@ -77,6 +102,11 @@ html(lang="en")
         #silhouette-wrapper
           #silhouette
             #silhouette-img
+      #access-overlay.overlay
+        #arrow-up-img
+        #press-allow Press 
+          strong allow
+        #asking-access #{"(We're asking for access to your camera)"}
     #join-queue-modal.reveal-modal
       .modal-wrapper
         h2 Start 
@@ -89,7 +119,7 @@ html(lang="en")
               span.required *
             input(type='text', name='user_stage_name', id='user_stage_name')  
           .form-item.textarea
-            label(for='performance_desc') You performance description:
+            label(for='performance_desc') Describe what you're gonna do:
             textarea(name='performance_desc', id='performance_desc', rows='3')
         .form-button-wrapper 
           #join-queue-button-wrapper.button-wrapper.orange-button
@@ -98,7 +128,22 @@ html(lang="en")
                 strong queue
           #cancel-queue-button-wrapper.button-wrapper.gray-button.close-modal
             #cancel-queue-button
-              span Cancel
+              span Cancel              
+    #enter-name-modal.reveal-modal.medium
+      .modal-wrapper
+        h3 
+          strong Hey
+          | , what's your name?
+        h4 Tell everyone your name if you want to chat
+        form
+          .form-item.text
+            label(for='user_chat_name') Your name:
+            input(type='text', name='user_chat_name', id='user_chat_name')  
+        .form-button-wrapper 
+          #enter-name-button-wrapper.button-wrapper.orange-button
+            #enter-name-button
+              span 
+              strong Enter                                                                                    
     #performer-view-modal.reveal-modal.xlarge
       .modal-wrapper
         h2 You're up next!

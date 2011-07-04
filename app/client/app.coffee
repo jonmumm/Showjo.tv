@@ -1,10 +1,14 @@
 # Client-side Code
 
 window.showjo = {}
+window.showjo.user = {}
 
 # Bind to events
 SS.socket.on 'disconnect', ->  $('#message').text('SocketStream server is down :-(')
 SS.socket.on 'connect', ->     $('#message').text('SocketStream server is up :-)')
+
+$(document).ready ->
+  # console.log 'read to go'
 
 # This method is called automatically when the websocket connection is established. Do not rename/delete
 exports.init = ->
@@ -16,7 +20,9 @@ exports.init = ->
 
   # Make a call to the server to retrieve a message
   SS.server.app.init (response) ->
-    showjo.user = id: response
+    showjo.user = response
+    
+    populateUserInfo(showjo.user)
     
     showjo.opentok.addEventListener 'sessionConnected', (event) ->
       
@@ -30,17 +36,44 @@ exports.init = ->
 bindClientEvents = ->
   $('#join-queue-button-wrapper').click ->
     SS.client.queue.join()
-    
-  $('#rock-mic-button-wrapper'}.click ->
+  
+  showQueueModal = ->
+    $("#performance_desc").val('')
     $('#join-queue-modal').reveal(
       animation: 'fadeAndPop'
       animationspeed: '300'
       closeonbackgroundclick: true
       dismissmodalclass: 'close-modal'
     )
+    $('#user_stage_name').focus()
+    
+  $('#rock-mic-button-wrapper'}.click ->
+    showQueueModal()
+    
+  $("#could-be").click ->
+    showQueueModal()
     
   $('#leave-queue-button-wrapper').click ->
     SS.client.queue.leave()
+   
+  $('input[type=text]').keypress (e) ->
+    if e.which is 13
+      e.preventDefault()
+      
+  ###
+  $('#user_chat_name').keypress (e) ->
+    if e.which is 13
+      name = $(@).val()
+      if name isnt ''
+        SS.client.chat.enterName name 
+  ###     
+    
+  $('#enter_chat_text').keypress (e) ->    
+    if e.which is 13
+      text = $(@).val()
+      if text isnt ''
+        SS.client.chat.send text
+      $(@).val('')
 
 bindServerEvents = ->
   # Queue Events
@@ -54,3 +87,18 @@ bindServerEvents = ->
   SS.events.on 'performanceStart', (performance) -> SS.client.performance.start(performance)
   SS.events.on 'performanceEnd', (performance) -> SS.client.performance.end(performance)
   SS.events.on 'performanceCancel', (performance) -> SS.client.performance.cancel(performance)
+  
+  # User Events
+  SS.events.on 'userUpdate', (user) -> SS.client.user.update(user)
+  
+  # Chat Events
+  SS.events.on 'chatInit', (messages) -> SS.client.chat.init(messages)
+  SS.events.on 'chatMessage', (message) -> SS.client.chat.message(message)
+  SS.events.on 'chatAlert', (alert) -> SS.client.chat.alert(alert)
+  
+  # Vote Events
+  SS.events.on 'voteEnable', () -> SS.client.vote.enable()
+  
+populateUserInfo = (user) ->
+  if user.name?
+    $("#user_stage_name").val(user.name)

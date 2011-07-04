@@ -16,27 +16,27 @@ exports.join = ->
 exports.leave = ->
   SS.server.queue.leave (response) ->
     $("#leave-queue-button-wrapper").hide('fast')  
+    $("#rock-mic-button-wrapper}").show('fast')
 
 # Server event handlers
 exports.init = (queue) ->
-  $(".empty").hide('fast')
+  $(".empty-show").hide('fast')
+  $(".empty-depend").removeClass('empty', 500)
   renderQueue(queue)
 
+exports.list = []
+
 exports.add = (performance) ->
-  $(".empty").hide('fast')
+  $(".empty-show").hide('fast')
+  $(".empty-depend").removeClass('empty', 500)
+  #$(".empty-show-depend").toggleClass('empty', 'fast')
   renderQueue(performance)
+  @list[performance.id] = performance
   
 exports.remove = (performance) ->
   $("#queue-" + performance).hide('slow')
   $("#queue-" + performance).remove()
-  
-exports.stageView = () ->
-  $("#queue-wrapper").hide('fast')
-  $("#leave-queue-button-wrapper").hide('fast')  
-  
-exports.unstageView = () ->
-  $("queue-wrapper").show('fast')
-  $("#rock-mic-button-wrapper").show('fast')	
+  delete @list[performance.id]
 
 renderQueue = (performance) ->
   $("#templates-queue").tmpl(performance).hide().appendTo("#queue-list").show('slow')
