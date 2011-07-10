@@ -25,7 +25,6 @@ exports.init = ->
     showjo.user = response
     SS.client.analytics.track "User initialized"
     
-    
     populateUserInfo(showjo.user)
     
     showjo.opentok.addEventListener 'sessionConnected', (event) ->
@@ -64,15 +63,6 @@ bindClientEvents = ->
   
   $('.feedback').click ->
     UserVoice.showPopupWidget();
-  
-  $('button').mousedown ->
-    $(@).addClass('down')
-
-  $('button').mouseup ->
-    $(@).removeClass('down')
-    
-  $('button').mouseout ->
-    $(@).removeClass('down')
     
   $('#rock-mic-button-wrapper'}.click ->
     showQueueModal()
