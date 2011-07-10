@@ -1,4 +1,6 @@
 exports.send = (text) ->
+  SS.client.analytics.track "Chat entered"
+  
   if showjo.user.name?
     # Just send the message
     SS.server.chat.message text, (response) ->

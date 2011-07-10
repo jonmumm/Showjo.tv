@@ -15,7 +15,15 @@ exports.call = (request, response, next) ->
     # See README for more details and example middleware code
    
     # require('my_middleware').call request, response, next
- 
+    
+    ###
+    if request.url is '/'
+      next()
+    else
+      response.writeHead(200, {"Content-Type": "text/html"})
+      response.write("<div>Hello World</div>")
+      response.end()
+    ###
 
     # Unless you're passing the callback to custom middleware, you'll need to call next() here 
     next()

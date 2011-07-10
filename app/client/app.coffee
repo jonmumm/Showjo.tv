@@ -8,10 +8,12 @@ SS.socket.on 'disconnect', ->  $('#message').text('SocketStream server is down :
 SS.socket.on 'connect', ->     $('#message').text('SocketStream server is up :-)')
 
 $(document).ready ->
-  # console.log 'read to go'
+  SS.client.analytics.track "Page loaded"
+
 
 # This method is called automatically when the websocket connection is established. Do not rename/delete
-exports.init = ->
+exports.init = ->  
+  
   # Bind client and server events
   bindClientEvents()
   bindServerEvents()
@@ -21,10 +23,13 @@ exports.init = ->
   # Make a call to the server to retrieve a message
   SS.server.app.init (response) ->
     showjo.user = response
+    SS.client.analytics.track "User initialized"
+    
     
     populateUserInfo(showjo.user)
     
     showjo.opentok.addEventListener 'sessionConnected', (event) ->
+      SS.client.analytics.track "OpenTok connected"
       
       # Once connected to OpenTok, ask to initialize state
       SS.server.app.requestState (response) ->
@@ -34,10 +39,12 @@ exports.init = ->
     # TOOD: Show loading message before we are connected to session
     
 bindClientEvents = ->
+  
   $('#join-queue-button-wrapper').click ->
     SS.client.queue.join()
   
   showQueueModal = ->
+    SS.client.analytics.track "Rock mic clicked"
     $("#performance_desc").val('')
     $('#join-queue-modal').reveal(
       animation: 'fadeAndPop'
@@ -46,6 +53,26 @@ bindClientEvents = ->
       dismissmodalclass: 'close-modal'
     )
     $('#user_stage_name').focus()
+  
+  # Show the feedback button 7 seconds in to page load
+  setTimeout ->
+    $("#feedback").slideDown 'fast'
+  , 7000
+  
+  $('#sign-up-link').click ->
+    $("#launchrock-modal}").reveal()
+  
+  $('.feedback').click ->
+    UserVoice.showPopupWidget();
+  
+  $('button').mousedown ->
+    $(@).addClass('down')
+
+  $('button').mouseup ->
+    $(@).removeClass('down')
+    
+  $('button').mouseout ->
+    $(@).removeClass('down')
     
   $('#rock-mic-button-wrapper'}.click ->
     showQueueModal()
@@ -59,14 +86,12 @@ bindClientEvents = ->
   $('input[type=text]').keypress (e) ->
     if e.which is 13
       e.preventDefault()
-      
-  ###
-  $('#user_chat_name').keypress (e) ->
-    if e.which is 13
-      name = $(@).val()
-      if name isnt ''
-        SS.client.chat.enterName name 
-  ###     
+  
+  $("#lame-button-wrapper").click ->
+    SS.client.vote.submit(-1)
+    
+  $("#awesome-button-wrapper").click ->
+    SS.client.vote.submit(1) 
     
   $('#enter_chat_text').keypress (e) ->    
     if e.which is 13
@@ -97,7 +122,8 @@ bindServerEvents = ->
   SS.events.on 'chatAlert', (alert) -> SS.client.chat.alert(alert)
   
   # Vote Events
-  SS.events.on 'voteEnable', () -> SS.client.vote.enable()
+  SS.events.on 'ratingInit', (ratings) -> SS.client.rating.init(ratings)
+  SS.events.on 'ratingUpdate', (rating) -> SS.client.rating.update(rating)
   
 populateUserInfo = (user) ->
   if user.name?

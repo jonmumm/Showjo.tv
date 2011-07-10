@@ -1,10 +1,12 @@
 exports.actions =
 
-  join: (params, cb) -> 
+  join: (params, cb) ->         
     # Get the next performance ID
     R.incr 'next:performance.id', (err, performanceId) =>
+      performanceId = parseInt(performanceId)
       params.id = performanceId  
       params.user_id = parseInt(@session.user_id)
+      params.queue_time = new Date().toString()
       
       # Store the performance
       R.set "performance:#{performanceId}", JSON.stringify(params), (err, data) ->     
@@ -27,7 +29,7 @@ exports.actions =
     # Update the users name
     SS.server.user.setName.call @, params.name, ->
        
-    cb true
+    cb()
   
   leave: (cb) ->
     console.log @session.user_id

@@ -1,21 +1,37 @@
 !!! 5
 html(lang="en")
   head
+    link(rel='stylesheet', href='/assets/reset.css')
     != SocketStream
     title Showjo.tv
     link(href='http://fonts.googleapis.com/css?family=Josefin+Slab:100,100italic,light,lightitalic,regular,regularitalic,600,600italic,bold,bolditalic&v1', rel='stylesheet', type='text/css')
     link(href='http://fonts.googleapis.com/css?family=Swanky+and+Moo+Moo&v1', rel='stylesheet', type='text/css')
-    link(rel='stylesheet', href='/assets/reveal.css')
-    script(type='text/javascript', src='/assets/jquery-ui-1.8.14.custom.min.js')
-    script(type='text/javascript', src='/assets/jquery.effects.core.js')
+    link(href='http://launchrock.com/api/lr.api.0.2.css', rel='stylesheet', type='text/css')
+    link(href='/assets/launchrock.css', rel='stylesheet', type='text/css')
+    link(href='/assets/reveal.css', rel='stylesheet', type='text/css')
     script(type='text/javascript', src='http://staging.tokbox.com/v0.91/js/TB.min.js')
-    script(type='text/javascript', src='/assets/jquery.reveal.js')
+    script(type='text/javascript', src='http://launchrock.com/api/lr.api.0.5-min.js')
   body
     #header-wrapper
       #header
         h1 Showjo
           span .tv
         h4 The online open mic.
+        #beta beta        
+        #feedback.feedback We 
+          strong really 
+          | need your 
+          strong feedback
+          | .
+    #subheader-wrapper 
+      #subheader We're in beta. Why don't you 
+        a#feedback-link.feedback tell us your ideas
+        |  and 
+        a#sign-up-link sign-up
+        |  for release updates? 
+        span Last update 07/10/2011 
+          a#what-we-added (see what we added)
+          | .
     #page-wrapper
       #page
         #left-col-wrapper.column-wrapper
@@ -46,6 +62,7 @@ html(lang="en")
                 #publisher-wrapper
             #timer-wrapper
               #timer
+                #timer-message                
                 #time-passed.time
                   span.minutes 0
                   span :
@@ -58,11 +75,11 @@ html(lang="en")
                   #time-bar
             #voter-wrapper
               #voter
-                #lame-button-wrapper.button-wrapper
+                button#lame-button-wrapper
                   .vote-button 
                     span Lame
                     .thumb
-                #awesome-button-wrapper.button-wrapper
+                button#awesome-button-wrapper
                   .vote-button 
                     span Awesome
                     .thumb
@@ -74,11 +91,11 @@ html(lang="en")
                   span next
                 ol#queue-list.empty-depend.empty
                   li#queue-empty.empty-show Empty
-                #rock-mic-button-wrapper.button-wrapper.orange-button
+                button#rock-mic-button-wrapper.orange-button
                   #rock-mic-button
                     span Rock the 
                       strong mic
-                #leave-queue-button-wrapper.button-wrapper.orange-button
+                button#leave-queue-button-wrapper.orange-button
                   #leave-queue-button
                     span Leave the 
                       strong queue
@@ -122,11 +139,11 @@ html(lang="en")
             label(for='performance_desc') Describe what you're gonna do:
             textarea(name='performance_desc', id='performance_desc', rows='3')
         .form-button-wrapper 
-          #join-queue-button-wrapper.button-wrapper.orange-button
+          button#join-queue-button-wrapper.orange-button
             #join-queue-button
               span Join the 
                 strong queue
-          #cancel-queue-button-wrapper.button-wrapper.gray-button.close-modal
+          button#cancel-queue-button-wrapper.gray-button.close-modal
             #cancel-queue-button
               span Cancel              
     #enter-name-modal.reveal-modal.medium
@@ -140,7 +157,7 @@ html(lang="en")
             label(for='user_chat_name') Your name:
             input(type='text', name='user_chat_name', id='user_chat_name')  
         .form-button-wrapper 
-          #enter-name-button-wrapper.button-wrapper.orange-button
+          button#enter-name-button-wrapper.orange-button
             #enter-name-button
               span 
               strong Enter                                                                                    
@@ -148,4 +165,10 @@ html(lang="en")
       .modal-wrapper
         h2 You're up next!
         #publisher-wrapper
-          #publisher    
+          #publisher
+    #launchrock-modal.reveal-modal.medium
+      #launchrock
+    script(type='text/javascript', src='/assets/feedback.js')
+    script(type='text/javascript', src='/assets/launchrock.js')
+    script(type='text/javascript', src='/assets/mp_protocol.js')
+    script(type='text/javascript', src='/assets/mpmetrics.js')

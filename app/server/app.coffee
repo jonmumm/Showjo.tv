@@ -2,8 +2,7 @@
 
 exports.actions =
   
-  init: (cb) ->
-    
+  init: (cb) ->            
     # Bind disconnect cleanup events
     @session.on 'disconnect', (session) =>
       # Call these methods on @ (this) to get access to session var
@@ -14,7 +13,8 @@ exports.actions =
     if !@session.user_id
       R.incr 'next:user.id', (err, user_id) =>
         if user_id
-          @session.setUserId(user_id)
+          user_id = parseInt(user_id)
+          @session.setUserId user_id
           # Create a new user and store it
           user = 
             id: user_id
@@ -24,15 +24,20 @@ exports.actions =
         else
           cb false
     else
+      # @session.setUserId @session.user_id
+      # BUG: Returning users arent publishg streaming correct
       getUser @session.user_id, cb
       
   requestState: (cb) ->                
     SS.server.queue.init(@session.user_id)
-    SS.server.performance.init(@session.user_id) 
-    SS.server.chat.init(@session.user_id)          
+    SS.server.performance.init(@session.user_id)
+    SS.server.chat.init(@session.user_id)
+    # SS.server.rating.init(@session.user_id)
     cb true
     
 getUser = (user_id, cb) ->
+  console.log user_id
+  
   R.get "user:#{user_id}", (err, user) =>
     if user?
       cb JSON.parse(user)

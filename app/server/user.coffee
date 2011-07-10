@@ -3,7 +3,9 @@ exports.actions =
   setName: (name, cb) ->
     R.get "user:#{@session.user_id}", (err, user) =>
       if user
-        user = JSON.parse(user)
+        user = JSON.parse(user)  
+
+        typeof user.id
         user.name = name
         R.set "user:#{@session.user_id}", JSON.stringify(user), (err, response) =>
           if response

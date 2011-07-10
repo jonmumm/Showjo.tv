@@ -12,6 +12,7 @@ exports.init = (performance) ->
 exports.stage = (performance) ->
   # Update view for performer  
   if performance.user_id is showjo.user.id
+    SS.client.analytics.track "Stage entered"
     SS.client.view.stageStartPerformer(performance)
     # If we are the performer, publish our stream
   else
@@ -19,24 +20,32 @@ exports.stage = (performance) ->
   
 exports.start = (performance) ->
   if performance.user_id is showjo.user.id
+    SS.client.analytics.track "Performance entered"
     SS.client.view.performStartPerformer(performance)
     
     # console.log 'I am live!!'
   else
-    console.log 'perform viewer'
-    console.log performance
     SS.client.view.performStartViewer(performance)
     # If we are not the performer, subscribe to the stream
     # subscribe performance.stream
     
 exports.end = (performance) ->
+  endOrCancel()
+  
   if performance.user_id is showjo.user.id
+    SS.client.analytics.track "Performance ended"
     SS.client.view.performEndPerformer(performance)
   else
     SS.client.view.performEndViewer(performance)
     
 exports.cancel = (performance) ->
+  endOrCancel()
+  
   if performance.user_id is showjo.user.id
+    SS.client.analytics.track "Performance cancelled"
     SS.client.view.performCancelPerformer(performance)
   else
     SS.client.view.performCancelViewer(performance)
+    
+endOrCancel = ->
+  SS.client.rating.clear()

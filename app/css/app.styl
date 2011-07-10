@@ -9,9 +9,25 @@ spacing = 12px
 josefin = 'Josefin Slab', arial, serif
 swanky = 'Swanky and Moo Moo', arial, serif
 
-dropshadow = 0px 1px 2px #aaa
+dropshadow = 0px 1px 2px #444
 dropshadow-light = 0px 1px 2px #ddd
-dropshadow-dark = 0px 1px 2px #777
+dropshadow-dark = 0px 1px 2px #000
+dropshadow-down = 0px 1px 1px #777
+
+blue-background = #dbfbfe
+
+blue-dark = #049bb4
+blue-med = #12a8c1
+blue-light = #06e0f4
+
+orange-button = #ffc924
+orange-hover = #ffd659
+
+red-button = #fd553a
+red-hover = #fe6d55
+red-disabled = #fde7f0
+
+gray-button = #f9f9f9
 
 // Main
 
@@ -19,7 +35,7 @@ body, html
 	height 100%
 
 body
-	background #dbfbfe
+	background blue-background
 	font-family josefin
 	
 strong
@@ -56,7 +72,7 @@ textarea
 	
 input:focus, textarea:focus
 	outline none
-	border 1px dotted #06e0f4
+	border 1px dotted blue-light
 
 #header-wrapper
 	background white
@@ -76,6 +92,68 @@ input:focus, textarea:focus
 	position absolute
 	top 54px
 	left 314px
+
+#header #beta
+	position absolute
+	color blue-dark
+	font-family swanky
+	font-size 3em
+	z-index 20
+	left 218px
+	top 52px
+	font-weight bold
+
+#subheader-wrapper
+	background white
+	round 10px
+	width 974px
+	margin 0 auto
+	margin-top spacing
+	
+#subheader
+	padding 10px
+	text-align center
+	font-weight 100
+
+#subheader a
+	font-weight bold
+	color blue-med
+
+#subheader span
+	font-size .8em
+	
+#subheader a:hover
+	cursor pointer
+	color blue-dark
+	text-shadow 1px 1px 0px #ddd
+	
+#feedback
+	display none
+	right 20px
+	color white
+	text-shadow 1px 1px 0px #444
+	text-align center
+	font-size 1.2em
+	top 0px
+	background blue-med
+	padding 14px 20px
+	round-corner bottom, right, 10px
+	round-corner bottom, left, 10px
+	box-shadow dropshadow
+	position absolute
+	font-family swanky
+
+#feedback:hover
+	background blue-dark
+	cursor pointer
+	box-shadow dropshadow-dark
+	color #fff6df
+
+#feedback:hover strong
+	color orange-hover
+	
+#feedback strong
+	color #fff6df
 	
 #page-wrapper
 	width 974px
@@ -93,28 +171,38 @@ input:focus, textarea:focus
 	width 220px
 	margin-top spacing
 
-.button-wrapper
+button
 	box-shadow dropshadow
 	padding 12px
 	round 6px
 	text-align center
+	font-family josefin
 	font-size 1.6em
+	border none
 
-.button-wrapper > div
+button > div
 	height 28px
 	
-.button-wrapper:hover
+button:hover
 	cursor pointer
 	box-shadow dropshadow-dark
+
+button.down
+	box-shadow dropshadow-down
+	margin-top 1px
+	
+button:disabled
+	cursor default
+	box-shadow dropshadow
 	
 .orange-button
-	background #ffc924
+	background orange-button
 	
 .orange-button:hover
-	background #ffd659
+	background orange-hover
 	
 .gray-button
-	background #f9f9f9
+	background gray-button
 
 .gray-button:hover
 	background #eee
@@ -143,20 +231,28 @@ input:focus, textarea:focus
 	position relative
 	
 #timer-wrapper
-	height 28px
 	round 8px
 	background white
 	margin-bottom spacing
 	display none
-	
+
 #timer
 	position relative
+
+#timer-message
+	font-family swanky
+	text-align center
+	font-size 1.8em
+	padding-top 6px
+	padding-bottom 4px
+	color #444
+	display none
 
 .time
 	position absolute
 	color #aaa
 	font-size .8em
-	top 8px
+	bottom 7px
 	
 #time-passed
 	text-align left
@@ -175,7 +271,7 @@ input:focus, textarea:focus
 	width 20%
 
 #time-bar.perform
-	background #049bb4
+	background blue-dark
 
 #time-bar.stage
 	background #ff5432
@@ -191,18 +287,26 @@ input:focus, textarea:focus
 	font-weight 600
 
 #lame-button-wrapper
-	background #fbcdd0
+	background red-button
 	left 12px
 	
 #lame-button-wrapper:hover
-	background #fde7f0
+	background red-hover
+
+#lame-button-wrapper:disabled
+	background red-disabled
+	color #666
 	
 #awesome-button-wrapper
-	background #c7fcb5
+	background #56d050
 	right 12px
 	
 #awesome-button-wrapper:hover
+	background #65ea5f
+
+#awesome-button-wrapper:disabled
 	background #edfde7
+	color #666
 	
 #leave-queue-button-wrapper
 	font-size 1.5em
@@ -210,6 +314,7 @@ input:focus, textarea:focus
 
 .vote-button
 	position relative
+	height 106px
 	
 .vote-button > span
 	position absolute
@@ -226,8 +331,14 @@ input:focus, textarea:focus
 #awesome-button-wrapper .thumb
 	background url('/images/thumbs-up.png') no-repeat
 
+#awesome-button-wrapper:disabled .thumb
+	background url('/images/thumbs-up-disabled.png') no-repeat
+
 #lame-button-wrapper .thumb
 	background url('/images/thumbs-down.png') no-repeat
+
+#lame-button-wrapper:disabled .thumb
+	background url('/images/thumbs-down-disabled.png') no-repeat
 
 .column > div
 	background white
@@ -251,6 +362,9 @@ input:focus, textarea:focus
 
 #queue-list.empty
 	height 16px
+
+#rock-mic-button-wrapper
+	width 100%
 
 #messages
 	margin-top 6px
@@ -285,7 +399,7 @@ input:focus, textarea:focus
 	padding 4px
 	round 4px
 	margin 2px 0
-	background #ffd659
+	background orange-hover
 
 .message .text
 	color #777
@@ -306,11 +420,11 @@ input:focus, textarea:focus
 
 #performer #could-be
 	cursor pointer
-	color #ffd659
+	color orange-hover
 
 #performer #could-be:hover
-	color #ffc924
-	border-bottom 1px dotted #ffc924
+	color orange-button
+	border-bottom 1px dotted orange-button
 
 #performer #performer-info
 	display none
@@ -326,7 +440,7 @@ input:focus, textarea:focus
 #performer #performer-description
 	margin-top 8px
 	font-size 1.4em
-	color #049bb4
+	color blue-dark
 	
 .modal-wrapper h4
 	color #bbb
@@ -375,10 +489,19 @@ input:focus, textarea:focus
 	bottom 0px
 	right 0px
 	width 100px
+	
+#performance-plot
+	height 100px
+	margin-top 12px
+	round 8px
+	padding 8px
+	border 1px dashed #eee
 
 #performance-rating-wrapper
 	display none
 
+#performance-plot .jqplot-series-canvas
+	background white
 .overlay
 	position relative
 

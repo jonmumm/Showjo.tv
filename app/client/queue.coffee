@@ -13,30 +13,34 @@ exports.join = ->
 	  $("#rock-mic-button-wrapper}").hide('fast')
 	  $("#leave-queue-button-wrapper").show('fast')
 	  
+	SS.client.analytics.track "Queue joined"
+	  
 exports.leave = ->
+  SS.client.analytics.track "Queue left"
+  
   SS.server.queue.leave (response) ->
     $("#leave-queue-button-wrapper").hide('fast')  
-    $("#rock-mic-button-wrapper}").show('fast')
+    $("#rock-mic-button-wrapper}").showSS('fast')
+
+exports.count = 0
 
 # Server event handlers
 exports.init = (queue) ->
   $(".empty-show").hide('fast')
   $(".empty-depend").removeClass('empty', 500)
+  @count += queue.length
   renderQueue(queue)
-
-exports.list = []
 
 exports.add = (performance) ->
   $(".empty-show").hide('fast')
   $(".empty-depend").removeClass('empty', 500)
-  #$(".empty-show-depend").toggleClass('empty', 'fast')
   renderQueue(performance)
-  @list[performance.id] = performance
+  @count++
   
 exports.remove = (performance) ->
   $("#queue-" + performance).hide('slow')
   $("#queue-" + performance).remove()
-  delete @list[performance.id]
+  @count--
 
 renderQueue = (performance) ->
   $("#templates-queue").tmpl(performance).hide().appendTo("#queue-list").show('slow')

@@ -4,7 +4,9 @@ exports.actions =
     R.get "user:#{@session.user_id}", (err, user) =>
       if user
         user = JSON.parse(user)
-        R.incr "next:message.id", (err, message_id) =>                            
+        R.incr "next:message.id", (err, message_id) => 
+          message_id = parseInt(message_id)
+          
           message = 
             id: message_id
             user_id: user.id
@@ -18,10 +20,14 @@ exports.actions =
           SS.publish.broadcast 'chatMessage', message
     
     cb true
+  
+  
+  alert: (alert, cb = =>) ->
+    SS.publish.broadcast 'chatAlert', alert
     
   init: (user_id) ->
     # Get all messages
-    R.lrange 'messages', 0, -1, (err, message_list) => 
+    R.lrange 'messages', -12, -1, (err, message_list) => 
       # If there is performances in the queue, get them all and send the back
       if message_list.length > 0
         keys = message_list.map (message_id) -> "message:#{message_id}"

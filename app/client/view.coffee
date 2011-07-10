@@ -1,7 +1,10 @@
-exports.stageStartPerformer = (performance) ->
+exports.stageStartPerformer = (performance) ->  
   stageStart(performance)
   
-  # TODO: Disable all buttons
+  $("#empty-show").hide('fast')
+  
+  
+  $("#voter > button").attr('disabled', 'disabled')
   $("#queue-wrapper").hide('fast')    
   $("#leave-queue-button-wrapper").hide('fast')
   
@@ -24,6 +27,8 @@ exports.stageStartViewer = (performance) ->
 
 exports.performStartPerformer = (performance) ->
   performStart(performance)
+  
+  SS.server.performance.screenshot showjo.opentok.publisher.getImgData()
   
   # Show some sort of live notifications
   
@@ -50,23 +55,36 @@ exports.performCancelViewer = (performance) ->
 # Stage view updates for both performer and viewer  
 stageStart = (performance) ->
   
+  $(".empty-show").hide('fast')
   $("#performer-name").text(performance.name)
   $("#performer-description").text(performance.description)
   $("#nobody-on-stage").hide('fast')
   $("#performer-info").show('fast')
-        
+          
   # Check again to be sure the performance hasn't started
   if not performance.start_time?
+    
+    if performance.user_id is showjo.user.id
+      $("#timer-message").text("You're about to go live!")
+    else
+      $("#timer-message").text("#{performance.name} is about to go live!")
+    
+    $("#timer-message").show('fast')
+    
     resetTimer(SS.shared.constants.STAGE_LENGTH, false)
     $("#time-bar").removeClass('perform')
     $("#time-bar").addClass('stage')
 
-    console.log performance
     timers.stageStart(performance)
     $("#timer-wrapper").show('fast')
 
 # Perform view updates for both performer and viewer    
-performStart = (performance) ->
+performStart = (performance) ->  
+  
+  # Shows the performance rating
+  $("#performance-rating-wrapper").show('fast')
+  
+  $("#timer-message").hide('fast')
   
   # Shows the performance timer
   showTimer = ->
@@ -93,6 +111,7 @@ performCancel = (performance) ->
   performClear(performance)
   
 endCancelPerformer = (performance) ->
+  $("#voter > button").removeAttr('disabled')
   $("#messages").toggleClass('performing', 'fast')
   $("#queue-wrapper").show('fast')
   $("#rock-mic-button-wrapper").show('fast')
@@ -100,15 +119,16 @@ endCancelPerformer = (performance) ->
   unpublish()
   
 performClear = (performance) ->
+  # Hide the performance rating
+  $("#performance-rating-wrapper").hide('fast')
+  
   # Hide the timer bar
   console.log 'cleared'
   $("#timer-wrapper").hide 'fast'
   timers.clear()
   
-  $("#performer-info").hide 'fast'
-  
-  # TODO: Make this a timed event, show a notification for some time
-  if (SS.client.queue.list.length > 0)
+  $("#performer-info").hide 'fast'# TODO: Make this a timed event, show a notification for some time
+  if (SS.client.queue.count == 0)
     $(".empty-show").show 'fast', ->
       $(".empty-depend").addClass('empty', 500)
   
@@ -118,9 +138,9 @@ publish = () ->
     for stream in event.streams
       do (stream) -> 
         if stream.connection.connectionId is showjo.opentok.connection.connectionId
+          SS.client.analytics.track "Camera permission accepted"
           stageAcceptPerformer()
           SS.server.performance.publish stream, (response) ->
-            console.log response
 
   appendPublisher()
   
@@ -198,6 +218,9 @@ timers =
       if not @timerPulsate and (time_span.getSeconds() < 5)
         @timerPulsate = true
         $("#time-bar").effect("pulsate", { times: 10 }, 500)
+      
+      if percentage <= 0
+        clearInterval(id)
          
     , 1000
     @ids.push id
@@ -219,6 +242,7 @@ timers =
       
       percentage = ((time_span.getSeconds() + (time_span.getMinutes() * 60)) / SS.shared.constants.PERFORM_LENGTH) * 100
       $("#time-bar").css('width', "#{percentage}%")
+
     , 1000
     @ids.push id
     
@@ -228,7 +252,7 @@ timers =
       # POSSIBLE BUG: We might have left over ids in the array 
       # that are no longer active, clearing them might cause exception
       id = @ids.pop()
-      clearTimeout(id)
+      clearInterval(id)
 
   # Holds the IDs of the timers so we can clear them if necessary  
   ids: []
