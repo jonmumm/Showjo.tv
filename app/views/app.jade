@@ -24,7 +24,7 @@ html(lang="en")
           strong feedback
           | .
     #subheader-wrapper 
-      #subheader We're in beta. Why don't you 
+      #subheader We're really early in beta. Why don't you 
         a#feedback-link.feedback tell us your ideas
         |  and 
         a#sign-up-link sign-up
@@ -75,11 +75,11 @@ html(lang="en")
                   #time-bar
             #voter-wrapper
               #voter
-                button#lame-button-wrapper
+                button#lame-button-wrapper(disabled="disabled")
                   .vote-button 
                     span Lame
                     .thumb
-                button#awesome-button-wrapper
+                button#awesome-button-wrapper(disabled="disabled")
                   .vote-button 
                     span Awesome
                     .thumb
@@ -91,11 +91,11 @@ html(lang="en")
                   span next
                 ol#queue-list.empty-depend.empty
                   li#queue-empty.empty-show Empty
-                button#rock-mic-button-wrapper.orange-button(disabled="disabled")
+                button#rock-mic-button-wrapper.orange-button
                   #rock-mic-button
                     span Rock the 
                       strong mic
-                button#leave-queue-button-wrapper.orange-button(disabled="disabled")
+                button#leave-queue-button-wrapper.orange-button
                   #leave-queue-button
                     span Leave the 
                       strong queue
@@ -139,13 +139,11 @@ html(lang="en")
             label(for='performance_desc') Describe what you're gonna do:
             textarea(name='performance_desc', id='performance_desc', rows='3')
         .form-button-wrapper 
+          a#cancel-link.close-modal Cancel
           button#join-queue-button-wrapper.orange-button
             #join-queue-button
               span Join the 
-                strong queue
-          button#cancel-queue-button-wrapper.gray-button.close-modal
-            #cancel-queue-button
-              span Cancel              
+                strong queue             
     #enter-name-modal.reveal-modal.medium
       .modal-wrapper
         h3 
