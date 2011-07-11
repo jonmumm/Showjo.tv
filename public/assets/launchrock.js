@@ -3,7 +3,7 @@ $(document).ready(function(){
         refCodeUrl: "http://showjo.tv/?ref=",
         lrDomain: "showjo.tv",
         apiKey: "ad9b2a7ed0a0626a7573a31cf6635f6e",
-        inviteList: "Launching soon. Enter your email to join our invite list:"
+        inviteList: "Sign up to know when new things are happenin':"
     });        
 
     // Handles events related to signup form, form validations
@@ -16,20 +16,19 @@ $(document).ready(function(){
     // Handles rendering the post submit content:
     LR.postSubmit = new PostSignupForm('pagesubmit',{
         twitterHandle: "showjotv",
-        twitterMessage: "ShowjoTV is launching soon and I'm one of the first in line! Join me. #launch",
-        newUserHeaderText: "",
-        newUserParagraphText: "<br/><br/>To share with your friends, click 'Recommend', 'Tweet' and 'Invite by Email':",
-        newUserParagraphText3: "",
+        twitterMessage: "ShowjoTV is an online open mic and is in beta. It's pretty awesome -- try it out.",
+        newUserHeaderText: "Thanks for signing up",
+        newUserParagraphText: "We'll let you know when new things are happenin'",
+        newUserParagraphText3: "Let your friends know what's goin' on.",
         returningUserHeaderText: "Welcome Back!",
-        returningUserParagraphText: "<br/><br/>To share with your friends, click 'Recommend', 'Tweet' and 'Invite by Email':",
-        returningUserParagraphText3: "",
-        statsPreText: "Your live stats: ",
-        footerLinks: "<a href='http://twitter.com/showjotv'>Follow Us on Twitter</a> | <a href='http://showjotv'>Like Us on Facebook</a>"
-,showDescription: true,
-showTagLine: true,
+        returningUserParagraphText: "We'll let you know when new things are happenin'",
+				returningUserParagraphText3: "Let your friends know what's goin' on.",
+        footerLinks: "<a href='http://twitter.com/showjotv'>Follow Us on Twitter</a>"
+,showDescription: false,
+showTagLine: false,
 showHeaderText: true,
 showParagraphText: true,
-showStats: true,
+showStats: false,
 showShareButtons: true,
 showFooterLinks: true    });
 

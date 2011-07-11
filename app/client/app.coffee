@@ -9,6 +9,20 @@ SS.socket.on 'connect', ->     $('#message').text('SocketStream server is up :-)
 
 $(document).ready ->
   SS.client.analytics.track "Page loaded"
+  $("#connecting-modal").reveal(
+    animation: 'fade'
+    animationSpeed: '0'
+    closeonbackgroundclick: false
+  )
+  
+  setTimeout ->
+    $("#connecting-message").fadeOut 'slow', ->
+      $("#timeout").fadeIn 'slow'
+  , 20000
+  
+  $("#connecting-message > p").effect "pulsate", 
+    times: 10
+  , 2000
 
 
 # This method is called automatically when the websocket connection is established. Do not rename/delete
@@ -28,6 +42,8 @@ exports.init = ->
     populateUserInfo(showjo.user)
     
     showjo.opentok.addEventListener 'sessionConnected', (event) ->
+      $("#connecting-modal").trigger("reveal:close")
+      
       SS.client.analytics.track "OpenTok connected"
       
       # Once connected to OpenTok, ask to initialize state

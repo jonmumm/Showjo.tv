@@ -6,7 +6,8 @@
 // Variables
 spacing = 12px
 
-josefin = 'Josefin Slab', arial, serif
+josefin-slab = 'Josefin Slab', arial, serif
+josefin-sans = 'Josefin Sans', arial, serif
 swanky = 'Swanky and Moo Moo', arial, serif
 
 dropshadow = 0px 1px 2px #444
@@ -22,6 +23,7 @@ blue-light = #06e0f4
 
 orange-button = #ffc924
 orange-hover = #ffd659
+orange-light = #fbefcb
 
 red-button = #fd553a
 red-hover = #fe6d55
@@ -36,7 +38,7 @@ body, html
 
 body
 	background blue-background
-	font-family josefin
+	font-family josefin-sans
 	
 strong
 	font-weight 600
@@ -44,6 +46,7 @@ strong
 h1
 	font-size 4.6em
 	font-weight 700
+	font-family josefin-slab
 
 h1 span
 	font-weight 300
@@ -60,7 +63,7 @@ h4
 	font-weight 300
 	
 input, textarea
-	font-family josefin
+	font-family josefin-sans
 	font-size 1em
 	border 1px solid #eee
 	color #666
@@ -83,23 +86,23 @@ input:focus, textarea:focus
 	margin 0 auto
 	position relative
 
-#header h1
+.logo h1
 	position absolute
 	top 10px
 
-#header h4
-	color #6c6969
+.logo h4
+	color #777
 	position absolute
-	top 54px
+	top 58px
 	left 314px
 
-#header #beta
+.logo .beta
 	position absolute
 	color orange-button
 	font-family swanky
 	font-size 3em
 	z-index 20
-	left 218px
+	left 214px
 	top 52px
 	font-weight bold
 
@@ -176,7 +179,7 @@ button
 	padding 12px
 	round 6px
 	text-align center
-	font-family josefin
+	font-family josefin-slab
 	font-size 1.6em
 	border none
 
@@ -399,13 +402,10 @@ button:disabled
 	padding 4px
 	round 4px
 	margin 2px 0
-	background orange-hover
+	background orange-light
 
 .message .text
 	color #777
-	
-#messages .message:nth-child(odd)
-	background #f7f7f7
 	
 #performer #nobody-on-stage
 	margin 12px 10px
@@ -469,8 +469,10 @@ button:disabled
 	width 472px
 	
 .form-item span.required
-	color #ff6969
 	margin-left 4px
+
+.required
+	color #ff6969
 
 #enter-name-button-wrapper
 	position absolute
@@ -579,3 +581,34 @@ button:disabled
 	font-size 1.2em
 	top 144px
 	left 290px
+	
+#connecting-message > p
+	font-size 2.2em
+	text-align center
+	color #bbb
+
+#connecting-message strong
+	color blue-dark
+	
+#connecting-message #connecting-logo
+	position relative
+	width 306px
+	margin 0 auto
+	height 76px
+	margin-bottom 24px
+	
+#connecting-message #connecting-logo .beta
+	color orange-button
+	
+#connecting-wrapper #timeout
+	display none
+	color #bbb
+	font-size 1.4em
+	text-align center
+	line-height 2em
+	
+#timeout a
+	text-decoration none
+	
+#timeout a:hover
+	text-decoration underline
