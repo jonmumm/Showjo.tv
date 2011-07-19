@@ -28,7 +28,7 @@ exports.stageStartViewer = (performance) ->
 exports.performStartPerformer = (performance) ->
   performStart(performance)
   
-  SS.server.performance.screenshot showjo.opentok.publisher.getImgData()
+  # SS.server.performance.screenshot showjo.opentok.publisher.getImgData()
   
   # Show some sort of live notifications
   
@@ -111,7 +111,6 @@ performCancel = (performance) ->
   performClear(performance)
   
 endCancelPerformer = (performance) ->
-  $("#voter > button").removeAttr('disabled')
   $("#messages").toggleClass('performing', 'fast')
   $("#queue-wrapper").show('fast')
   $("#rock-mic-button-wrapper").show('fast')

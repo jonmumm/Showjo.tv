@@ -20,9 +20,11 @@ $(document).ready ->
       $("#timeout").fadeIn 'slow'
   , 20000
   
+  ###
   $("#connecting-message > p").effect "pulsate", 
     times: 10
   , 2000
+  ###
 
 
 # This method is called automatically when the websocket connection is established. Do not rename/delete
