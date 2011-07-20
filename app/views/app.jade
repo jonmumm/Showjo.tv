@@ -25,11 +25,32 @@ html(lang="en")
           strong feedback
           | .
     #subheader-wrapper 
-      #subheader We're early in beta. Why don't you 
-        a#feedback-link.feedback tell us your ideas
-        |  and 
-        a#sign-up-link sign-up
-        |  for release updates? 
+      #subheader
+        #user-info.profile.left
+          img.avatar32(src='images/avatar92.jpg', alt='Jon Avatar')
+          span.user-name JonMumm
+        #fan-info.profile.left
+          strong.count 864
+          span.label
+            |  fans
+        #level-info.profile.left
+          #progress-wrapper
+            #progress-bar-wrapper
+              #progress-bar
+              #level-xp-points 
+                span 638 / 7000
+                |  xp
+            #current-level.level-status
+              | Current Level:
+              strong Amature
+            #next-level.level-status
+              | Next Level:
+              strong Superstar
+        #login-panel.profile.right
+          a#save-progress-link Save your progress
+          |  or 
+          a#login-link login
+        #user-expand
     #page-wrapper
       #page
         #left-col-wrapper.column-wrapper

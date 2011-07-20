@@ -8,7 +8,9 @@ SS.socket.on 'disconnect', ->  $('#message').text('SocketStream server is down :
 SS.socket.on 'connect', ->     $('#message').text('SocketStream server is up :-)')
 
 $(document).ready ->
-  SS.client.analytics.track "Page loaded"
+  # SS.client.analytics.track "Page loaded"
+  
+  ###
   $("#connecting-modal").reveal(
     animation: 'fade'
     animationSpeed: '0'
@@ -20,7 +22,6 @@ $(document).ready ->
       $("#timeout").fadeIn 'slow'
   , 20000
   
-  ###
   $("#connecting-message > p").effect "pulsate", 
     times: 10
   , 2000
