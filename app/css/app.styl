@@ -7,8 +7,9 @@
 spacing = 12px
 
 josefin-slab = 'Josefin Slab', arial, serif
-josefin-sans = 'Josefin Sans', arial, serif
+josefin-sans = 'Josefin Sans', arial, sans-serif
 swanky = 'Swanky and Moo Moo', arial, serif
+bowlby = 'Bowlby One SC', sans-serif;
 
 dropshadow = 0px 1px 2px #444
 dropshadow-light = 0px 1px 2px #ddd
@@ -152,11 +153,14 @@ a
 #fan-info, #login-panel
 	line-height 32px
 
+#login-panel
+	margin-right 4px
+
 #level-info
 	border none
 
 #progress-wrapper
-	width 380px
+	width 480px
 	height 100%
 	position relative
 
@@ -182,7 +186,7 @@ a
 .level-status
 	position absolute
 	bottom 0px
-	font-size 12px
+	font-size 13px
 
 #current-level
 	left 0px
@@ -194,34 +198,49 @@ a:hover
 	cursor pointer
 	color blue-dark
 	text-decoration underline
-	
-#feedback
-	display none
-	right 20px
-	color white
-	text-shadow 1px 1px 0px #444
-	text-align center
-	font-size 1.2em
-	top 0px
-	background blue-med
-	padding 14px 20px
-	round-corner bottom, right, 10px
-	round-corner bottom, left, 10px
-	box-shadow dropshadow
+
+.dropdown
 	position absolute
+	top 0px
+	box-shadow dropshadow
+	text-shadow #444 1px 1px 0px
+	
+.dropdown:hover
+	cursor pointer
+
+#help
+	text-align center
+	right 0px
+	color white
+	round-corner bottom, right, 4px
+	round-corner bottom, left, 4px
+	font-size .9em
+	background blue-med
+	padding 6px 10px
 	font-family swanky
 
-#feedback:hover
+#help:hover
 	background blue-dark
 	cursor pointer
+	color #fff6df
 	box-shadow dropshadow-dark
-	color #fff6df
 
-#feedback:hover strong
+#help:hover strong
 	color orange-hover
+
+#points
+	text-align right
+	font-size 2em
+	background blue-dark
+	color orange-button
+	round-corner bottom, right, 10px
+	round-corner bottom, left, 10px
+	padding 10px 20px
+	right 126px
+	font-family swanky
 	
-#feedback strong
-	color #fff6df
+#points strong
+	letter-spacing 2px
 	
 #page-wrapper
 	clear both

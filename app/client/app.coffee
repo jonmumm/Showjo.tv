@@ -71,12 +71,7 @@ bindClientEvents = ->
       dismissmodalclass: 'close-modal'
     )
     $('#user_stage_name').focus()
-  
-  # Show the feedback button 7 seconds in to page load
-  setTimeout ->
-    $("#feedback").slideDown 'fast'
-  , 7000
-  
+
   $('#sign-up-link').click ->
     $("#launchrock-modal}").reveal()
   
