@@ -28,7 +28,7 @@ exports.actions =
       # BUG: Returning users arent publishg streaming correct
       getUser @session.user_id, cb
       
-  requestState: (cb) ->                
+  requestState: (cb) -> 
     SS.server.queue.init(@session.user_id)
     SS.server.performance.init(@session.user_id)
     SS.server.chat.init(@session.user_id)

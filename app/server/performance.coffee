@@ -76,8 +76,9 @@ exports.actions =
   # Sends performance state to connecting client
   init: (user_id) ->
     exports.actions.current (performance) =>
+      console.log 'got cur performance!!!'
       if performance? 
-        SS.publish.user user_id, 'performanceInit', JSON.parse(performance)
+        SS.publish.user user_id, 'performanceInit', performance
 
 # Prepares the performer on stage
 stage = (performance) ->    
