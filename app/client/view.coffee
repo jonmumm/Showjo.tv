@@ -58,6 +58,7 @@ stageStart = (performance) ->
   $(".empty-show").hide('fast')
   $("#performer-name").text(performance.name)
   $("#performer-description").text(performance.description)
+  $("#voter > button").removeAttr('disabled')
   $("#nobody-on-stage").hide('fast')
   $("#performer-info").show('fast')
           
@@ -120,6 +121,9 @@ endCancelPerformer = (performance) ->
 performClear = (performance) ->
   # Hide the performance rating
   $("#performance-rating-wrapper").hide('fast')
+  
+  # Disable voting button
+  $("#voter > button").attr('disabled', 'disabled')
   
   # Hide the timer bar
   console.log 'cleared'
