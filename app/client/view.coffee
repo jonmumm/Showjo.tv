@@ -244,6 +244,10 @@ timers =
       $("#time-passed .seconds").text(SS.shared.time.pad(time_span.getSeconds(), 2))
       
       percentage = ((time_span.getSeconds() + (time_span.getMinutes() * 60)) / SS.shared.constants.PERFORM_LENGTH) * 100
+      
+      if percentage > 100
+        percentage = 100
+      
       $("#time-bar").css('width', "#{percentage}%")
 
     , 1000
