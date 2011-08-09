@@ -1,6 +1,17 @@
 exports.actions =
 
-  join: (params, cb) ->         
+  join: (params, cb) ->
+    perf = new SS.shared.models.performance params
+    
+    # perf.save();
+    
+    #perf.validate()
+    
+    # perf.validate()
+    
+    cb()
+    
+    ###         
     # Get the next performance ID
     R.incr 'next:performance.id', (err, performanceId) =>
       performanceId = parseInt(performanceId)
@@ -30,6 +41,7 @@ exports.actions =
     SS.server.user.setName.call @, params.name, ->
        
     cb()
+    ###
   
   leave: (cb) ->
     console.log @session.user_id

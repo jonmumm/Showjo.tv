@@ -4,6 +4,8 @@ exports.actions =
   
   init: (cb) ->            
     # Bind disconnect cleanup events
+    
+    ###
     @session.on 'disconnect', (session) =>
       # Call these methods on @ (this) to get access to session var
       SS.server.queue.leave.call @, ->
@@ -34,6 +36,8 @@ exports.actions =
     SS.server.chat.init(@session.user_id)
     # SS.server.rating.init(@session.user_id)
     cb true
+  
+  ###
     
 getUser = (user_id, cb) ->
   console.log user_id

@@ -8,28 +8,13 @@ SS.socket.on 'disconnect', ->  $('#message').text('SocketStream server is down :
 SS.socket.on 'connect', ->     $('#message').text('SocketStream server is up :-)')
 
 $(document).ready ->
-  # SS.client.analytics.track "Page loaded"
-  
-  if SS.env is "production"
-    $("#connecting-modal").reveal(
-      animation: 'fade'
-      animationSpeed: '0'
-      closeonbackgroundclick: false
-    )
-  
-    setTimeout ->
-      $("#connecting-message").fadeOut 'slow', ->
-        $("#timeout").fadeIn 'slow'
-    , 20000
-  
-    $("#connecting-message > p").effect "pulsate", 
-      times: 10
-    , 2000
+  # SS.client.analytics.track "Page loaded"  
 
 
 # This method is called automatically when the websocket connection is established. Do not rename/delete
 exports.init = ->  
   
+  ###
   # Bind client and server events
   bindClientEvents()
   bindServerEvents()
@@ -54,34 +39,15 @@ exports.init = ->
     showjo.opentok.connect '413302', 'devtoken'
     
     # TOOD: Show loading message before we are connected to session
+  ###
     
 bindClientEvents = ->
   
-  $('#join-queue-button-wrapper').click ->
-    SS.client.queue.join()
-  
-  showQueueModal = ->
-    SS.client.analytics.track "Rock mic clicked"
-    $("#performance_desc").val('')
-    $('#join-queue-modal').reveal(
-      animation: 'fadeAndPop'
-      animationspeed: '300'
-      closeonbackgroundclick: true
-      dismissmodalclass: 'close-modal'
-    )
-    $('#user_stage_name').focus()
-
   $('#sign-up-link').click ->
     $("#launchrock-modal}").reveal()
   
   $('.feedback').click ->
     UserVoice.showPopupWidget();
-    
-  $('#rock-mic-button-wrapper'}.click ->
-    showQueueModal()
-    
-  $("#could-be").click ->
-    showQueueModal()
     
   $('#leave-queue-button-wrapper').click ->
     SS.client.queue.leave()

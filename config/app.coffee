@@ -8,7 +8,7 @@ exports.config =
 
   # HTTP server (becomes secondary server when HTTPS is enabled)
   http:
-    port:         3000
+    port:         3002
     hostname:     "0.0.0.0"
   
   # HTTPS server (becomes primary server if enabled)
@@ -19,7 +19,7 @@ exports.config =
 
   # HTTP(S) request-based API
   api:
-    enabled:      true
+    enabled:      false
     prefix:       'api'
     https_only:   false
 
@@ -28,3 +28,9 @@ exports.config =
     enabled:      false
     strict:       true
 
+  # Load balancing. Uncomment and set suitable TCP values for your network once you're ready to run across multiple boxes
+  #cluster:
+  #  sockets:
+  #    fe_main:    "tcp://10.0.0.10:9000"
+  #    fe_pub:     "tcp://10.0.0.10:9001"
+  #    be_main:    "tcp://10.1.1.10:9000"
