@@ -1,51 +1,54 @@
-exports.actions = 
+exports.actions =
 
-  create: (id, performance, cb = =>) ->
-    R.set "performance:#{id}", performance, (err, response) =>
-      if not err then cb true else cb false
+  getById: (id, cb) ->
+    if id?
+      M.Performance.findOne
+        _id: id
+      , (err, performance) ->
+        if err?
+          cb
+            success: false
+            data: err
+        else if not performance?
+          cb
+            success: false
+            data: "no performance found"
+        else
+          cb
+            success: true
+            data: performance
+    else
+      cb
+        success: false
+        data: "no performance_id specified"
   
-  read: (id, cb) ->
-    R.get "performance:#{id}", (err, performance) =>
-      if not err then cb JSON.parse(performance) else cb err      
-
-  update: (performance, cb = =>) ->
-    R.set "performance:#{performance.id}", JSON.stringify(performance), (err, response) =>
-      if not err then cb true else cb false
-
-  delete: (id, cb = =>) ->
-    R.del "performance:#{id}", (err, response) =>
-      if not err then cb response else cb err
-  
-  current: (cb) -> 
-    @currentId (id) =>
-      @read id, (performance) =>
-        cb performance
-  
-  currentId: (cb) ->
-    R.get "performance:current", (err, cur_perf_id) =>
-      if not err then cb cur_perf_id else cb err    
-      
-  tryNext: () ->
-    @currentId (cur_perf_id) =>
+  getCurrent: (cb) ->
+    R.get "performance:current", (err, cur_perf_id) =>      
       if not cur_perf_id?
-        # If there is no performance going on, get the top one in the queue
-        R.lpop "queue", (err, next_perf_id) =>
-          if next_perf_id?
-            SS.publish.broadcast 'queueRemove', next_perf_id
-            R.set "performance:current", next_perf_id   
-            @read next_perf_id, (performance) =>
-              stage performance       
+        cb
+          success: false
+          data: "no current performance"
+      else
+        @getById cur_perf_id, cb
   
+ 
   # Sets the stream of the person about to perform
   publish: (stream, cb) ->
-    @current (performance) => 
-      if performance.user_id is parseInt @session.user_id
-        performance.stream = stream        
-        @update performance       
-        cb true
+    @getCurrent (response) =>
+      console.log response
+      if response.success
+        console.log 'about to save'
+        performance = response.data
+        performance.stream = stream
+        console.log performance
+        performance.save (response) ->
+          console.log 'saving??'
+          console.log response
+          cb true      
       else
         cb false
 
+  ###
   # Whenever someone leaves, check if that person was currently performing
   # and cancel the performance if necessary
   leave: (cb) -> 
@@ -67,100 +70,87 @@ exports.actions =
           speaker: performance.name
           text: "has cancelled the performance."
         SS.server.chat.alert alert
+    ###
 
-  screenshot: (data, cb) ->
-    buffer = new Buffer data, 'base64'
-    console.log data.length, buffer.length
-    require('fs').writeFileSync('image.jpg', buffer, 0, buffer.length)
 
-  # Sends performance state to connecting client
-  init: (user_id) ->
-    exports.actions.current (performance) =>
-      if performance? 
-        SS.publish.user user_id, 'performanceInit', performance
+SS.events.on 'client:init', (session) ->
+  SS.server.performance.getCurrent (response) ->
+    if response.success
+      performance = response.data
+      SS.publish.user session.user_id, 'performance:init', performance
+      if performance.performed_at?
+        SS.publish.user session.user_id, 'performance:perform', performance
+      else
+        SS.publish.user session.user_id, 'performance:stage', performance
 
-# Prepares the performer on stage
-stage = (performance) ->    
-  # Mark the time that the performer has come on stage
 
-  performance.stage_time = new Date().toString()
-  R.set "performance:#{performance.id}", JSON.stringify(performance)
+SS.events.on 'client:disconnect', (session) ->
+  session._findOrCreate (session) ->
+    R.get "user:#{session.user_id}:last_performance", (err, performance_id) ->
+      if performance_id?
+        R.get "performance:current", (err, cur_perf_id) ->
+          if performance_id is cur_perf_id
+            SS.server.performance.getById cur_perf_id, (response) ->
+              if response.success
+                SS.publish.broadcast 'performance:cancel', response.data
+                SS.events.emit 'performance:cancel', response.data
 
-  # Tell everybody someone is on stage
-  SS.publish.broadcast 'performanceStage', performance
+SS.events.on 'performance:next', (performance) ->  
+  performance.staged_at = Date.now()
+  performance.save()
   
-  alert = 
-    speaker: performance.name
-    text: "is coming on stage."
-  SS.publish.broadcast 'chatAlert', alert
+  SS.publish.broadcast 'performance:init', performance
+  SS.events.emit 'performance:init', performance 
+  
+  SS.publish.broadcast 'performance:stage', performance
+  SS.events.emit 'performance:stage', performance    
 
-  # Start a timer for when the staging period ends
+SS.events.on 'performance:stage', (performance) ->
   timers.stageEnd performance
 
-# End of staging period, try to start performance
-stageEnd = () ->
-  exports.actions.current (performance) =>
-    perform performance
+SS.events.on 'performance:stage:end', (perf) ->
+  M.Performance.findOne
+    _id: perf._id
+  , (err, performance) ->
+    console.log performance
+    if performance.stream?
+      performance.performed_at = Date.now()
+      performance.length_sec = SS.shared.constants.PERFORM_LENGTH
+      performance.save()
+      
+      SS.publish.broadcast 'performance:perform', performance
+      SS.events.emit 'performance:perform', performance
+    else
+      R.del "performance:current", (err, remove_count) ->
+        SS.publish.broadcast 'performance:cancel', performance
+        SS.events.emit 'performance:cancel', performance
 
-# Start the performance if stream exists
-perform = (performance) ->
-  if performance.stream?  
-    # Mark the performance start time
-    performance.start_time = new Date().toString()
-    performance.length_sec = SS.shared.constants.PERFORM_LENGTH
-    exports.actions.update performance
+SS.events.on 'performance:perform', (performance) ->
+  timers.performEnd performance
 
-    # Tell everyone someones performance is starting
-    SS.publish.broadcast 'performanceStart', performance
-    
-    alert = 
-      speaker: performance.name
-      text: "is performing now!"
-    SS.server.chat.alert(alert)
-  
-    # Start the rating calculator
-    SS.server.rating.start(performance)
-  
-    # Start a timer for when the performance ends
-    timers.performEnd performance
-  else
-    exports.actions.delete "current"
-    SS.publish.broadcast 'performanceCancel', performance
-    alert = 
-      speaker: performance.name
-      text: "has cancelled the performance."
-    SS.publish.broadcast 'chatAlert', alert
-
-# End of performance, ask for next one
-performEnd = () ->
-  exports.actions.current (performance) =>
-
-    SS.publish.broadcast 'performanceEnd', performance
-  
-    # Stop the rating calculator
-    SS.server.rating.stop()
-  
-    # Send chat alert
-    alert = 
-      speaker: performance.name
-      text: "has finished performing."
-    SS.publish.broadcast 'chatAlert', alert
-  
-    # Remove current from DB and start next
-    exports.actions.delete "current", (response) =>
-      exports.actions.tryNext()
+SS.events.on 'performance:perform:end', (performance) ->
+  M.Performance.findOne
+    _id: performance.id
+  , (err, performance) ->
+    R.del "performance:current", (err, remove_count) ->  
+      SS.publish.broadcast 'performance:perform:end', performance
+      SS.events.emit 'performancee:perform:end', performance
 
 timers = 
   # Starts a timer to start the performance when staging time is over
   stageEnd: (performance) ->
-    interval = SS.shared.time.findInterval(performance.stage_time, SS.shared.constants.STAGE_LENGTH)
-    id = setTimeout stageEnd, interval
+    interval = SS.shared.time.findInterval(performance.staged_at, SS.shared.constants.STAGE_LENGTH)
+    id = setTimeout ->
+      SS.events.emit 'performance:stage:end', performance
+    , interval
     @ids.push id
 
   # Starts a timer to end the performance  
   performEnd: (performance) ->
-    interval = SS.shared.time.findInterval(performance.start_time, SS.shared.constants.PERFORM_LENGTH)
-    id = setTimeout performEnd, interval
+    interval = SS.shared.time.findInterval(performance.performed_at, SS.shared.constants.PERFORM_LENGTH)
+    id = setTimeout ->
+      SS.events.emit 'performance:perform:end', performance
+    , interval
     @ids.push id
 
   # Clears all the timers  

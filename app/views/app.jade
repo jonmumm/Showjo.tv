@@ -8,8 +8,6 @@ html(lang="en")
     link(href='http://fonts.googleapis.com/css?family=Swanky+and+Moo+Moo&v1', rel='stylesheet', type='text/css')
     link(href="http://fonts.googleapis.com/css?family=Josefin+Sans:100,100italic,300,300italic,400,400italic,600,600italic,700,700italic&v1", rel="stylesheet", type="text/css")
     link(href='http://fonts.googleapis.com/css?family=Bowlby+One+SC&v2', rel='stylesheet', type='text/css')
-    link(href='http://launchrock.com/api/lr.api.0.2.css', rel='stylesheet', type='text/css')
-    link(href='/assets/launchrock.css', rel='stylesheet', type='text/css')
     link(href='/assets/reveal.css', rel='stylesheet', type='text/css')
     script(type='text/javascript', src='http://staging.tokbox.com/v0.91/js/TB.min.js')
     script(type='text/javascript', src='http://launchrock.com/api/lr.api.0.5-min.js')
@@ -110,8 +108,8 @@ html(lang="en")
               #queue
                 h4 Up 
                   span next
-                ol#queue-list.empty-depend.empty
-                  li#queue-empty.empty-show Empty
+                ol#queue-list
+                  li#queue-empty Empty
                 button#rock-mic-button-wrapper.orange-button
                   #rock-mic-button
                     span Rock the 
@@ -210,6 +208,5 @@ html(lang="en")
               a(href='http://www.apple.com/safari/') Safari
               | .
     script(type='text/javascript', src='/assets/feedback.js')
-    script(type='text/javascript', src='/assets/launchrock.js')
     script(type='text/javascript', src='/assets/mp_protocol.js')
     script(type='text/javascript', src='/assets/mpmetrics.js')

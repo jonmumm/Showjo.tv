@@ -195,7 +195,7 @@ timers =
 
     # Calculate the end time
     end_time = new Date()    
-    start_time = new Date(performance.stage_time)
+    start_time = new Date(performance.staged_at)
     
     end_time.setSeconds(start_time.getSeconds() + SS.shared.constants.STAGE_LENGTH)
     
@@ -232,7 +232,7 @@ timers =
         
     # Calculate the end time
     end_time = new Date()    
-    start_time = new Date(performance.start_time)
+    start_time = new Date(performance.performed_at)
     
     end_time.setSeconds(start_time.getSeconds() + SS.shared.constants.PERFORM_LENGTH)
     

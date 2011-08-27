@@ -1,6 +1,6 @@
-exports.STAGE_LENGTH = 30
+exports.STAGE_LENGTH = 10
 
-exports.PERFORM_LENGTH = 60
+exports.PERFORM_LENGTH = 10
 
 exports.VOTE_DELAY_LENGTH = 5
 

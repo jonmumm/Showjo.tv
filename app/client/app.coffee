@@ -4,15 +4,22 @@ window.showjo = {}
 window.showjo.user = {}
 
 # Bind to events
-SS.socket.on 'disconnect', ->  $('#message').text('SocketStream server is down :-(')
-SS.socket.on 'connect', ->     $('#message').text('SocketStream server is up :-)')
-
-$(document).ready ->
-  # SS.client.analytics.track "Page loaded"  
-
+# SS.socket.on 'disconnect', ->  $('#message').text('SocketStream server is down :-(')
+# SS.socket.on 'connect', ->     $('#message').text('SocketStream server is up :-)')
 
 # This method is called automatically when the websocket connection is established. Do not rename/delete
-exports.init = ->  
+exports.init = ->
+
+  SS.server.app.init (response) ->
+    if response.success?
+      window.showjo.user = response.data
+    else
+      alert response.data
+
+  # This is probabl not the best way to do it since it introduces the session connect delay
+  # but will use this for now
+  showjo.opentok = TB.initSession '28757622dbf26a5a7599c2d21323765662f1d436'
+  showjo.opentok.connect '413302', 'devtoken'
   
   ###
   # Bind client and server events
@@ -68,32 +75,3 @@ bindClientEvents = ->
       if text isnt ''
         SS.client.chat.send text
       $(@).val('')
-
-bindServerEvents = ->
-  # Queue Events
-  SS.events.on 'queueInit', (queue) -> SS.client.queue.init(queue)
-  SS.events.on 'queueAdd', (performance) -> SS.client.queue.add(performance)
-  SS.events.on 'queueRemove', (performance) -> SS.client.queue.remove(performance)
-  
-  # Performance Events
-  SS.events.on 'performanceInit', (performance) -> SS.client.performance.init(performance)
-  SS.events.on 'performanceStage', (performance) -> SS.client.performance.stage(performance)
-  SS.events.on 'performanceStart', (performance) -> SS.client.performance.start(performance)
-  SS.events.on 'performanceEnd', (performance) -> SS.client.performance.end(performance)
-  SS.events.on 'performanceCancel', (performance) -> SS.client.performance.cancel(performance)
-  
-  # User Events
-  SS.events.on 'userUpdate', (user) -> SS.client.user.update(user)
-  
-  # Chat Events
-  SS.events.on 'chatInit', (messages) -> SS.client.chat.init(messages)
-  SS.events.on 'chatMessage', (message) -> SS.client.chat.message(message)
-  SS.events.on 'chatAlert', (alert) -> SS.client.chat.alert(alert)
-  
-  # Vote Events
-  SS.events.on 'ratingInit', (ratings) -> SS.client.rating.init(ratings)
-  SS.events.on 'ratingUpdate', (rating) -> SS.client.rating.update(rating)
-  
-populateUserInfo = (user) ->
-  if user.name?
-    $("#user_stage_name").val(user.name)

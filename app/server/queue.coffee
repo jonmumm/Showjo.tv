@@ -1,67 +1,105 @@
 exports.actions =
+	join: (params, cb = ->) ->
+		@getSession (session) ->
+			SS.server.user.getById session.user_id, (response) ->
+				if response.success
+					user = response.data
+					user.name = params.name
+					user.save()
+					
+					performance = new M.Performance
+						user_id: user._id
+						name: params.name
+						desc: params.desc
 
-  join: (params, cb) ->
-    perf = new SS.shared.models.performance params
-    
-    # perf.save();
-    
-    #perf.validate()
-    
-    # perf.validate()
-    
-    cb()
-    
-    ###         
-    # Get the next performance ID
-    R.incr 'next:performance.id', (err, performanceId) =>
-      performanceId = parseInt(performanceId)
-      params.id = performanceId  
-      params.user_id = parseInt(@session.user_id)
-      params.queue_time = new Date().toString()
-      
-      # Store the performance
-      R.set "performance:#{performanceId}", JSON.stringify(params), (err, data) ->     
-        SS.publish.broadcast 'queueAdd', params 
-        
-        alert = 
-          speaker: params.name
-          text: "has joined the queue."
-        SS.publish.broadcast 'chatAlert', alert
-      
-      # Put the performance on the queue       
-      R.rpush "queue", performanceId, (err, queueLength) ->
-        
-        if queueLength is 1
-          SS.server.performance.tryNext()
-      
-      # Put the performance in the users list of performance    
-      R.rpush "user:#{@session.user_id}:performances", performanceId  
-      
-    # Update the users name
-    SS.server.user.setName.call @, params.name, ->
-       
-    cb()
-    ###
-  
-  leave: (cb) ->
-    console.log @session.user_id
-    
-    # Get this persons last performance
-    R.lindex "user:#{@session.user_id}:performances", -1, (err, performance_id) =>
-      
-      # Check if that performance is currently in the queue
-      R.lrem "queue", 0, performance_id, (err, remove_count) =>
-        if remove_count > 0
-          SS.publish.broadcast 'queueRemove', performance_id  
-    cb true      
-  
-  # Sends queue state to connecting client  
-  init: (user_id) ->
-    
-    # Get the entire queue
-    R.lrange 'queue', 0, -1, (err, queueList) => 
-      # If there is performances in the queue, get them all and send the back
-      if queueList.length > 0
-        keys = queueList.map (performance) -> "performance:#{performance}"
-        R.mget keys, (err, queue) =>
-          SS.publish.user user_id, 'queueInit', queue.map (performance) -> JSON.parse(performance)
+					performance.save (err) ->
+						if err?
+							cb
+								success: false
+								data: err
+						else
+							R.rpush "queue", performance._id, (err, length) ->
+								if err?
+									cb
+										success: false
+										data: err
+								else
+									cb
+										success: true
+										data: performance
+									R.set "user:#{user._id}:last_performance", performance._id
+									session.attributes.last_performance = performance._id
+									SS.events.emit 'queue:join', performance
+									SS.publish.broadcast 'queue:join', performance
+					
+				else
+					cb response						 
+	
+	leave: (cb) ->
+	  @getSession (session) ->
+	    R.get "user:#{session.user_id}:last_performance", (err, performance_id) ->
+	      if err?
+	        cb
+	          success: false
+	          resposne: err
+	      else if not performance_id?
+	        cb
+	          success: false
+	          response: "not in queue"
+	      else
+	        remove performance_id, cb
+
+SS.events.on 'client:connect', (session) ->
+  R.lrange 'queue', 0, -1, (err, performance_ids) => 
+    M.Performance.find
+      _id: 
+        $in: performance_ids
+    , (err, queue) ->
+      if queue?
+        SS.publish.user session.user_id, 'queue:init', queue
+
+
+SS.events.on 'client:disconnect', (session) ->
+  session._findOrCreate (session) ->
+    R.get "user:#{session.user_id}:last_performance", (err, performance_id) ->
+      if performance_id?
+        remove performance_id, (response) -> # remove performance form the queue
+
+SS.events.on 'queue:join', (performance) ->
+	next() 
+
+SS.events.on 'performance:cancel', (performance) ->
+	next()
+
+SS.events.on 'performance:perform:end', (performance) ->
+	next()
+						
+next = () ->						 
+	R.get "performance:current", (err, cur_perf_id) ->
+		if not cur_perf_id?
+			R.lpop "queue", (err, next_perf_id) =>
+			  if next_perf_id?			  
+  			  M.Performance.findOne
+  			    _id: next_perf_id
+  			  , (err, performance) ->
+
+  			    if performance?
+  			      SS.publish.broadcast 'queue:leave', performance
+  			      SS.events.emit 'queue:leave', performance
+			    
+  			      R.set "performance:current", performance._id, (err, success) ->
+    			      SS.events.emit 'performance:next', performance
+
+remove = (id, cb = ->) ->
+	R.lrem "queue", 0, id, (err, remove_count) =>
+		if remove_count < 1
+			cb
+				success: false
+				data: "no performance to remove"
+		else
+			SS.publish.broadcast 'queue:leave', id
+			SS.events.emit 'queue:leave', id
+			cb
+				success: true
+				data:
+					id: id

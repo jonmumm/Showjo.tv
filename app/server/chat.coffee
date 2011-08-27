@@ -17,11 +17,10 @@ exports.actions =
           R.lpush "messages", message_id
           R.lpush "user:#{@session.user_id}:messages", message_id
     
-          SS.publish.broadcast 'chatMessage', message
+          SS.publish.broadcast 'message:chat', message
     
     cb true
-  
-  
+    
   alert: (alert, cb = =>) ->
     SS.publish.broadcast 'chatAlert', alert
     

@@ -27,11 +27,13 @@ connect = require('connect')
 # Stack for Primary Server
 exports.primary =
   [
-    
+    connect.cookieParser()
     #connect.logger()            # example of calling in-built connect middleware. be sure to install connect in THIS project and uncomment out the line above
+    
     connect.router (app) ->
       app.get '/test', (req, res, next) ->
-        console.log 'test'
+        # console.log req
+        console.log req.session
         next()
     
     #require('connect-i18n')()   # example of using 3rd-party middleware from https://github.com/senchalabs/connect/wiki

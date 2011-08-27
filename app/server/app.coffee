@@ -2,7 +2,20 @@
 
 exports.actions =
   
-  init: (cb) ->            
+  init: (cb = ->) ->
+    SS.server.user.getById @session.user_id, (response) =>
+      if response.success
+        user = response.data
+        SS.events.emit 'client:connect', @session # TODO: Put this after setUserId callback 
+      else
+        user = new M.User()
+        user.save()
+        @session.setUserId user._id, ->
+          SS.events.emit 'client:connect', @session # TODO: Put this after setUserId callback                     
+      cb 
+        success: true
+        data: user
+    
     # Bind disconnect cleanup events
     
     ###
@@ -29,16 +42,18 @@ exports.actions =
       # @session.setUserId @session.user_id
       # BUG: Returning users arent publishg streaming correct
       getUser @session.user_id, cb
-      
+    ###
+  
+  ###    
   requestState: (cb) -> 
     SS.server.queue.init(@session.user_id)
     SS.server.performance.init(@session.user_id)
     SS.server.chat.init(@session.user_id)
     # SS.server.rating.init(@session.user_id)
     cb true
-  
-  ###
-    
+    ###
+
+###    
 getUser = (user_id, cb) ->
   console.log user_id
   
@@ -47,3 +62,5 @@ getUser = (user_id, cb) ->
       cb JSON.parse(user)
     else
       cb false
+      
+  
