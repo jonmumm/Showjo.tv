@@ -1,17 +1,20 @@
 View = Backbone.View.extend
   initialize: ->
-    SS.events.on 'performance:stage', @onPerformanceStage    
+    SS.events.on 'performance:init', @onPerformanceInit
+    SS.events.on 'performance:stage', @onPerformanceStage
     SS.events.on 'performance:cancel', @onPerformanceCancel
     SS.events.on 'performance:perform', @onPerformancePerform
     SS.events.on 'performance:perform:end', @onPerformanceEnd
-    
+
+  onPerformanceInit: (performance) ->
+    console.log 'awefawfwaf'
+    appendPublisher()
+
   onPerformanceStage: (performance) ->
     if not showjo.opentok.connected
       alert 'Problem connecting to video stream'
       return
-    
-    appendPublisher()
-  
+
     if performance.user_id is showjo.user._id
       showjo.opentok.addEventListener "streamCreated", (event) ->
         for stream in event.streams
@@ -20,7 +23,7 @@ View = Backbone.View.extend
               SS.server.performance.publish stream, (response) ->
                 # Some UI notification
 
-      # Start publishing  
+                # Start publishing  
       showjo.opentok.publisher = showjo.opentok.publish "publisher-container",
         width: $("#publisher-wrapper").width()
         height: $("#publisher-wrapper").height()
@@ -34,11 +37,11 @@ View = Backbone.View.extend
         height: $("#publisher-wrapper").height()
 
       $("##{subscriber.id}").addClass "publisher-object"
-  
+
   onPerformanceCancel: (performance) ->
     if performance.user_id is showjo.user._id
       unpublish()
-    
+
   onPerformanceEnd: (performance) ->
     if performance.user_id is showjo.user._id
       unpublish()      

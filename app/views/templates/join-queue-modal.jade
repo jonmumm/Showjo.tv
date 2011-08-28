@@ -1,0 +1,20 @@
+#join-queue-modal.reveal-modal
+  .modal-wrapper
+    h2 Start 
+      strong rockin' 
+      | the mic!
+    h4 Join the queue to grab 3 minutes on stage.
+    form
+      .form-item.text
+        label(for='user_stage_name') Your stage name:
+          span.required *
+        input(type='text', name='user_stage_name', id='user_stage_name')  
+      .form-item.textarea
+        label(for='performance_desc') Describe what you're gonna do:
+            textarea(name='performance_desc', id='performance_desc', rows='3')
+        .form-button-wrapper 
+          a#cancel-link.close-modal Cancel
+          button#join-queue-button-wrapper.orange-button
+            #join-queue-button
+              span Join the 
+                strong queue             

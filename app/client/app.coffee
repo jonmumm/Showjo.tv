@@ -9,16 +9,19 @@ window.showjo.user = {}
 
 # This method is called automatically when the websocket connection is established. Do not rename/delete
 exports.init = ->
+  showjo.connected = true;
+  showjo.opentok = TB.initSession '28757622dbf26a5a7599c2d21323765662f1d436'
 
-  SS.server.app.init (response) ->
-    if response.success?
-      window.showjo.user = response.data
-    else
-      alert response.data
+  showjo.opentok.addEventListener 'sessionConnected', (event) ->
+    showjo.opentok.removeEventListener 'sessionConnected', @
+    SS.server.app.init (response) ->
+      if response.success?
+        window.showjo.user = response.data
+      else
+        alert response.data
 
   # This is probabl not the best way to do it since it introduces the session connect delay
   # but will use this for now
-  showjo.opentok = TB.initSession '28757622dbf26a5a7599c2d21323765662f1d436'
   showjo.opentok.connect '413302', 'devtoken'
   
   ###

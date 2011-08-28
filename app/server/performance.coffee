@@ -44,7 +44,7 @@ exports.actions =
         performance.save (response) ->
           console.log 'saving??'
           console.log response
-          cb true      
+          cb true 
       else
         cb false
 
@@ -95,15 +95,15 @@ SS.events.on 'client:disconnect', (session) ->
                 SS.publish.broadcast 'performance:cancel', response.data
                 SS.events.emit 'performance:cancel', response.data
 
-SS.events.on 'performance:next', (performance) ->  
+SS.events.on 'performance:next', (performance) ->
   performance.staged_at = Date.now()
   performance.save()
-  
+
   SS.publish.broadcast 'performance:init', performance
-  SS.events.emit 'performance:init', performance 
-  
+  SS.events.emit 'performance:init', performance
+
   SS.publish.broadcast 'performance:stage', performance
-  SS.events.emit 'performance:stage', performance    
+  SS.events.emit 'performance:stage', performance
 
 SS.events.on 'performance:stage', (performance) ->
   timers.stageEnd performance
@@ -117,7 +117,7 @@ SS.events.on 'performance:stage:end', (perf) ->
       performance.performed_at = Date.now()
       performance.length_sec = SS.shared.constants.PERFORM_LENGTH
       performance.save()
-      
+
       SS.publish.broadcast 'performance:perform', performance
       SS.events.emit 'performance:perform', performance
     else

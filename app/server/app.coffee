@@ -6,13 +6,13 @@ exports.actions =
     SS.server.user.getById @session.user_id, (response) =>
       if response.success
         user = response.data
-        SS.events.emit 'client:connect', @session # TODO: Put this after setUserId callback 
+        SS.events.emit 'client:connect', @session
       else
         user = new M.User()
         user.save()
         @session.setUserId user._id, ->
-          SS.events.emit 'client:connect', @session # TODO: Put this after setUserId callback                     
-      cb 
+          SS.events.emit 'client:connect', @session
+      cb
         success: true
         data: user
     
