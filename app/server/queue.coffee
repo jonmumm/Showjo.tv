@@ -6,7 +6,7 @@ exports.actions =
 					user = response.data
 					user.name = params.name
 					user.save()
-					
+
 					performance = new M.Performance
 						user_id: user._id
 						name: params.name
@@ -31,17 +31,17 @@ exports.actions =
 									session.attributes.last_performance = performance._id
 									SS.events.emit 'queue:join', performance
 									SS.publish.broadcast 'queue:join', performance
-					
+
 				else
-					cb response						 
-	
+					cb response
+
 	leave: (cb) ->
 	  @getSession (session) ->
 	    R.get "user:#{session.user_id}:last_performance", (err, performance_id) ->
 	      if err?
 	        cb
 	          success: false
-	          resposne: err
+	          response: err
 	      else if not performance_id?
 	        cb
 	          success: false
@@ -50,9 +50,9 @@ exports.actions =
 	        remove performance_id, cb
 
 SS.events.on 'client:connect', (session) ->
-  R.lrange 'queue', 0, -1, (err, performance_ids) => 
+  R.lrange 'queue', 0, -1, (err, performance_ids) =>
     M.Performance.find
-      _id: 
+      _id:
         $in: performance_ids
     , (err, queue) ->
       if queue?
@@ -66,19 +66,19 @@ SS.events.on 'client:disconnect', (session) ->
         remove performance_id, (response) -> # remove performance form the queue
 
 SS.events.on 'queue:join', (performance) ->
-	next() 
+	next()
 
 SS.events.on 'performance:cancel', (performance) ->
 	next()
 
 SS.events.on 'performance:perform:end', (performance) ->
 	next()
-						
-next = () ->						 
+
+next = () ->
 	R.get "performance:current", (err, cur_perf_id) ->
 		if not cur_perf_id?
 			R.lpop "queue", (err, next_perf_id) =>
-			  if next_perf_id?			  
+			  if next_perf_id?
   			  M.Performance.findOne
   			    _id: next_perf_id
   			  , (err, performance) ->
@@ -86,7 +86,7 @@ next = () ->
   			    if performance?
   			      SS.publish.broadcast 'queue:leave', performance
   			      SS.events.emit 'queue:leave', performance
-			    
+
   			      R.set "performance:current", performance._id, (err, success) ->
     			      SS.events.emit 'performance:next', performance
 
