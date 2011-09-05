@@ -24,7 +24,7 @@ View = Backbone.View.extend
     if performance.user_id isnt showjo.user._id
       enableVote()
 
-$(document).ready ->
+$(document).ready ->    
   view = new View
     el: $("#voter")
     
@@ -35,11 +35,11 @@ enableVote = ->
   $("#voter > button").removeAttr('disabled')
 
 processVoteResponse = (response) ->
-  if response.success
+  if response.success    
     disableVote()
     timers.voteDelay()
   
-timers =
+timers = 
   voteDelay: () ->
     id = setTimeout =>
       enableVote()

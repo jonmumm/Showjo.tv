@@ -1,7 +1,8 @@
 View = Backbone.View.extend
   initialize: ->
-    SS.events.on 'performance:init', @onPerformanceInit
+    SS.events.on 'performance:init', @onPerformanceInit   
     SS.events.on 'performance:cancel', @onPerformanceCancel
+    SS.events.on 'performance:perform', @onPerformancePerform
     SS.events.on 'performance:perform:end', @onPerformanceEnd
 
   events:

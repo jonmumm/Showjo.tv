@@ -1,7 +1,5 @@
 View = Backbone.View.extend
   initialize: ->
-    $("#templates-join-queue-modal").tmpl().appendTo("body"); 
-
     $(document).bind 'joinQueueViewOpen', @render
     
   render: ->

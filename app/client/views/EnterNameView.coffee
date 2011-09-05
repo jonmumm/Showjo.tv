@@ -1,7 +1,5 @@
 View = Backbone.View.extend
   initialize: ->
-    $("#templates-enter-name-modal").tmpl().appendTo("body")
-
     $(document).bind 'enterNameViewOpen', @render
   
   render: ->

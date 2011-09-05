@@ -1,11 +1,8 @@
 View = Backbone.View.extend
   initialize: ->
-    if not showjo.connected
-      $("#templates-connecting-modal").tmpl().appendTo("body")
+    @render()
 
-      SS.socket.on 'connect', @closeDialog
-
-      @render()
+    SS.socket.on 'connect', @closeDialog
     
   render: ->
     # if SS.env is "production"
@@ -20,12 +17,12 @@ View = Backbone.View.extend
         $("#timeout").fadeIn 'slow'
     , 20000
 
-    $("#connecting-message > p").effect "pulsate",
+    $("#connecting-message > p").effect "pulsate", 
       times: 10
     , 2000
     
   closeDialog: ->
     $("#connecting-modal").trigger "reveal:close"
 
-$(document).ready ->
+$(document).ready ->    
   view = new View
